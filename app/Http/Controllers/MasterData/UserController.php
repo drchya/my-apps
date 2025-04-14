@@ -10,6 +10,7 @@ use App\Mail\UserCreatedMail;
 use App\Models\User;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -18,7 +19,8 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $users = User::oldest()->get();
+        Carbon::setLocale('id');
+        $users = User::oldest()->whereNull('deleted_at')->get();
 
         return view('pages/user/index', [
             'title' => 'Data User',
@@ -65,9 +67,13 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($slug)
     {
-        //
+        $user = User::where('slug', $slug)->firstOrFail();
+        return view('pages.user.profile', [
+            'title' => 'Profile User',
+            'user' => $user
+        ]);
     }
 
     /**
@@ -81,9 +87,26 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $slug)
     {
-        //
+        $user = User::where('slug', $slug)->firstOrFail();
+
+        $request->validate([
+            'username' => 'nullable|string|max:255',
+            'password' => 'nullable|string|min:8|confirmed'
+        ]);
+
+        if ($request->has('username')) {
+            $user->username = $request->input('username');
+        }
+
+        if ($request->has('password')) {
+            $user->password = bcrypt($request->input('password'));
+        }
+
+        $user->save();
+
+        return redirect()->back()->with('message', "Profile updated successfully!");
     }
 
     /**
@@ -91,11 +114,11 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
-    }
+        $user = User::findOrFail($id);
+        $user->delete();
 
-    public function table()
-    {
-        return view('pages.user.users-table', compact('users'));
+        return response()->json([
+            'message' => 'User deleted successfully!'
+        ]);
     }
 }

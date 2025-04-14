@@ -1,10 +1,12 @@
 <?php
 
-use App\Http\Controllers\MasterData\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MasterData\MountainController;
+use App\Http\Controllers\MasterData\UserController;
+use App\Http\Controllers\TrashBinController;
+use App\Http\Middleware\OnlyAdmin;
 use Illuminate\Support\Facades\Route;
-
 
 
 Route::get('/', function () {
@@ -13,9 +15,21 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::prefix('users')->name('users.')->group(function () {
+    Route::prefix('users')->name('users.')->middleware('only.admin')->group(function () {
         Route::resource('/', UserController::class)->parameters(['' => 'user']);
-        Route::get('profile/{user}', [UserController::class, 'profile'])->name('profile');
+    });
+
+    Route::middleware(['auth', OnlyAdmin::class])->group(function () {
+        Route::get('recycle', [TrashBinController::class, 'recycle'])->name('users.recycle');
+        Route::delete('users/${id}/force', [TrashBinController::class, 'forceDelete'])->name('users.force.delete');
+        Route::patch('users/{id}/restore', [TrashBinController::class, 'restore'])->name('users.restore');
+    });
+
+    Route::patch('users/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::get('users/profile/{slug}', [UserController::class, 'show'])->name('users.profile');
+
+    Route::prefix('mountain')->name('mountain.')->group(function () {
+        Route::resource('/', MountainController::class)->parameters(['' => 'mountain']);
     });
 });
 

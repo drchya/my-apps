@@ -12,9 +12,11 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-<body class="h-full text-sm text-white">
-    <div class="flex h-screen overflow-hidden">
-        @include('component.sidebar')
+<body class="h-full text-xs md:text-sm text-white">
+    <div class="flex">
+        <div class="flex min-h-screen overflow-hidden">
+            @include('component.sidebar')
+        </div>
         <!-- Main Content -->
         <div class="flex-1 flex flex-col">
             @include('component.header')

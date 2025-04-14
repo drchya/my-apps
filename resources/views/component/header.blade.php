@@ -1,6 +1,6 @@
 <!-- Topbar -->
 <header class="bg-gray-800 border-b border-gray-700 px-4 py-3 flex justify-between items-center">
-    <button @click="sidebarOpen = true" class="md:hidden text-gray-300 hover:text-white cursor-pointer">
+    <button @click="sidebarOpen = true" class="lg:hidden text-gray-300 hover:text-white cursor-pointer">
         <i class="fa-solid fa-bars"></i>
     </button>
     <h2 class="font-semibold text-white text-base">{{ $title }}</h2>
@@ -34,7 +34,7 @@
             x-transition
             class="absolute right-0 mt-2 w-40 bg-gray-700 rounded-md shadow-lg z-50 py-1"
         >
-            <a href="#" class="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-600">Profile</a>
+            <a href="{{ route('users.profile', Auth::user()->slug) }}" class="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-600">Profile</a>
             <a href="#" class="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-600">Settings</a>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf

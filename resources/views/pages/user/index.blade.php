@@ -2,7 +2,11 @@
 
 @section('content')
     <div x-data="formHandler()" x-ref="formWrapper" class="px-2">
-        <button @click="showForm = !showForm" class="bg-emerald-600 hover:bg-emerald-700 px-2 py-1 rounded text-white transition duration-300 ease-in-out cursor-pointer">Create User</button>
+        <div class="flex items-center gap-2">
+            <button @click="showForm = !showForm" class="bg-emerald-600 hover:bg-emerald-700 px-2 py-1 rounded text-gray-100 transition duration-300 ease-in-out cursor-pointer">Create User</button>
+
+            <a href="{{ route('users.recycle') }}" class="bg-red-600 hover:bg-red-700 px-2 py-1 rounded text-gray-100 transition duration-300 ease-in-out cursor-pointer">Recycle Bin</a>
+        </div>
 
         <div x-show="message" x-text="message"
             class="mt-4 text-sm text-green-400"
@@ -66,13 +70,13 @@
                     type="text"
                     id="customSearch"
                     placeholder="Search users..."
-                    class="bg-gray-800 border border-gray-600 text-gray-300 rounded px-3 py-1 ring ring-transparent focus:ring-emerald-500 focus:outline-none"
+                    class="bg-gray-800 border border-gray-600 text-gray-300 rounded px-2 py-1 focus:border-emerald-600 focus:outline-none transition duration-300 ease-in-out"
                     autocomplete="true"
                 >
             </div>
         </div>
 
-        <table id="users-table" class="border border-gray-800 shadow-lg rounded overflow-hidden">
+        <table id="users-table" class="border border-gray-800 shadow-lg rounded overflow-hidden mb-4">
             <thead class="bg-gray-800">
                 <tr>
                     <th>#</th>
@@ -82,13 +86,27 @@
                 </tr>
             </thead>
             <tbody id="users-table-body">
-                @forelse ($users as $index => $user)
-                    <tr>
+                @forelse ($users as $user)
+                    <tr data-id="{{ $user->id }}">
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $user->email }}</td>
-                        <td>{{ $user->created_at->format('d M Y') }}</td>
                         <td>
-                            <button><i class="fa-regular fa-trash-can"></i></button>
+                            <span class="hidden lg:inline">
+                                {{ $user->created_at->translatedFormat('l, d F Y - H:i:s') }}
+                            </span>
+
+                            <span class="inline lg:hidden">
+                                {{ $user->created_at->translatedFormat('l, d F Y') }}
+                            </span>
+                        </td>
+                        <td>
+                            @if($user->id !== auth()->id())
+                                <button class="delete-user text-red-500 hover:text-red-700 transition duration-300 ease-in-out cursor-pointer" data-id="{{ $user->id }}">
+                                    <i class="fa-regular fa-trash-can"></i>
+                                </button>
+                            @else
+                                <span class="text-emerald-500 italic text-xs">You</span>
+                            @endif
                         </td>
                     </tr>
                 @empty
@@ -130,6 +148,36 @@
             $('#customLength').on('change', function () {
                 usersTable.page.len(this.value).draw();
             });
+
+            document.addEventListener('click', async function (e) {
+                if (e.target.closest('.delete-user')) {
+                    const button = e.target.closest('.delete-user');
+                    const id = button.dataset.id;
+
+                    if (!confirm('Are you sure want to delete this user?')) return;
+
+                    try {
+                        const response = await fetch(`/users/${id}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                'Accept': 'application/json'
+                            }
+                        });
+
+                        if (!response.ok) throw new Error("Delete failed!");
+                        const row = $(`tr[data-id="${id}"]`);
+                        if (row.length) {
+                            row.fadeOut(300, function () {
+                                usersTable.row(row).remove.draw();
+                            });
+                        }
+                    } catch(error) {
+                        console.error("Delete error: ", error);
+                        alert("Failed to delete users!");
+                    }
+                }
+            })
         });
 
         function formHandler() {
