@@ -8,8 +8,12 @@
         </div>
         <hr class="text-gray-700" />
         <div>
-            <form action="{{ route('mountain.store') }}" method="POST">
+            <form action="{{ isset($mountain) ? route('mountain.update', $mountain->slug) : route('mountain.store') }}" method="POST">
                 @csrf
+                @if(isset($mountain))
+                    @method('PUT')
+                @endif
+
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div>
                         <label for="mountain" class="block text-gray-300 mb-1">Name of Mountain</label>
@@ -23,7 +27,7 @@
                             "
                             placeholder="Type of Mountain..."
                             required
-                            value="{{ old('name') }}"
+                            value="{{ old('name', $mountain->name ?? '') }}"
                         >
                         @error('name')
                             <p class="text-red-500 mt-1">{{ $message }}</p>
@@ -41,7 +45,7 @@
                                 @error('location') border-red-500 focus:ring-red-500 focus:border-red-500 @enderror
                             "
                             placeholder="City, Province, Country."
-                            value="{{ old('location') }}"
+                            value="{{ old('location', $mountain->location ?? '') }}"
                         >
                         @error('location')
                             <p class="text-red-500 mt-1">{{ $message }}</p>
@@ -56,10 +60,14 @@
                             name="latitude"
                             class="
                                 w-full px-3 py-2 border border-gray-700 rounded text-gray-300 focus:outline-none focus:ring focus:ring-emerald-600 focus:border-emerald-600 transition duration-300 ease-in-out
+                                @error('latitude') border-red-500 focus:ring-red-500 focus:border-red-500 @enderror
                             "
                             placeholder="0.0"
-                            value="{{ old('latitude') }}"
+                            value="{{ old('latitude', $mountain->latitude ?? '') }}"
                         >
+                        @error('latitude')
+                            <p class="text-red-500 mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div>
@@ -70,24 +78,32 @@
                             name="longitude"
                             class="
                                 w-full px-3 py-2 border border-gray-700 rounded text-gray-300 focus:outline-none focus:ring focus:ring-emerald-600 focus:border-emerald-600 transition duration-300 ease-in-out
+                                @error('longitude') border-red-500 focus:ring-red-500 focus:border-red-500 @enderror
                             "
                             placeholder="0.0"
-                            value="{{ old('longitude') }}"
+                            value="{{ old('longitude', $mountain->longitude ?? '') }}"
                         >
+                        @error('longitude')
+                            <p class="text-red-500 mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div>
                         <label class="block text-gray-300 mb-1">Height (Mdpl)</label>
                         <input
-                            type="text"
+                            type="number"
                             id="elevation"
                             name="elevation"
                             class="
                                 w-full px-3 py-2 border border-gray-700 rounded text-gray-300 focus:outline-none focus:ring focus:ring-emerald-600 focus:border-emerald-600 transition duration-300 ease-in-out
+                                @error('elevation') border-red-500 focus:ring-red-500 focus:border-red-500 @enderror
                             "
                             placeholder="0"
-                            value="{{ old('elevation') }}"
+                            value="{{ old('elevation', $mountain->elevation ?? '') }}"
                         >
+                        @error('elevation')
+                            <p class="text-red-500 mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
 

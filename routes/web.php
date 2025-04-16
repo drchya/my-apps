@@ -29,7 +29,8 @@ Route::middleware('auth')->group(function () {
     Route::get('users/profile/{slug}', [UserController::class, 'show'])->name('users.profile');
 
     Route::prefix('mountain')->name('mountain.')->group(function () {
-        Route::resource('/', MountainController::class)->parameters(['' => 'mountain']);
+        Route::resource('', MountainController::class)->parameters(['' => 'mountain']);
+        Route::delete('${id}/force', [MountainController::class, 'forceDelete'])->name('force.delete');
     });
 });
 

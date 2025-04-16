@@ -38,7 +38,10 @@ class MountainController extends Controller
     {
         $request->validate([
             'name' => 'required|unique:mountains,name',
-            'location' => ['required', 'regex:/^[a-zA-Z\s]+,\s[a-zA-Z\s]+,\s[a-zA-Z\s]+$/']
+            'location' => ['required', 'regex:/^[a-zA-Z\s]+,\s[a-zA-Z\s]+,\s[a-zA-Z\s]+$/'],
+            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
+            'elevation' => 'nullable|numeric'
         ]);
 
         Mountain::create([
@@ -64,17 +67,45 @@ class MountainController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $slug)
     {
-        //
+        $mountain = Mountain::where('slug', $slug)->first();
+
+        if (!$mountain) {
+            return redirect()->route('mountain.index')->with('error', 'Mountain Not Found.');
+        }
+
+        return view('pages.mountain.form', [
+            'title' => 'Form Edit Mt. ' . $mountain->name,
+            'mountain' => $mountain
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $slug)
     {
-        //
+        $mountain = Mountain::where('slug', $slug)->firstOrFail();
+
+        $request->validate([
+            'name' => 'required|unique:mountains,name,' . $mountain->id,
+            'location' => ['required', 'regex:/^[a-zA-Z\s]+,\s[a-zA-Z\s]+,\s[a-zA-Z\s]+$/'],
+            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
+            'elevation' => 'nullable|numeric'
+        ]);
+
+        $mountain->update([
+            'name' => $request->name,
+            'location' => $request->location ?? null,
+            'latitude' => $request->latitude ?? null,
+            'longitude' => $request->longitude ?? null,
+            'elevation' => $request->elevation ?? null,
+            'description' => $request->description ?? null
+        ]);
+
+        return redirect()->route('mountain.index')->with('message', "Mountain has been updated!");
     }
 
     /**
@@ -83,5 +114,13 @@ class MountainController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function forceDelete($id)
+    {
+        $mountain = Mountain::findOrFail($id);
+
+        $mountain->forceDelete();
+        return response()->json(['message' => 'Data has been deleted.']);
     }
 }

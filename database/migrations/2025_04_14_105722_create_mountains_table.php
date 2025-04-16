@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('mountains', function (Blueprint $table) {
             $table->id();
+            $table->string('slug')->unique();
             $table->string('name')->nullable();
             $table->string('location')->nullable();
             $table->decimal('latitude', 10, 7)->nullable();

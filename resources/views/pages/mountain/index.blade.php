@@ -8,7 +8,16 @@
             </div>
         @endif
 
-        <div x-data="{ message: '{{ session('message') }}' }" x-init="setTimeout(() => message = '', 3000)">
+        <div
+            x-data="
+                { message: '{{ session('message') }}',
+                 deleted: '{{ session('delete') }}' }
+            "
+            x-init="
+                setTimeout(() => message = '', 3000);
+                setTimeout(() => deleted = '', 3000);
+            "
+        >
             <div
                 x-show="message"
                 x-text="message"
@@ -40,7 +49,7 @@
                 <input
                     type="text"
                     id="customSearch"
-                    placeholder="Search users..."
+                    placeholder="Search mountain..."
                     class="bg-gray-800 border border-gray-600 text-gray-300 rounded px-2 py-1 focus:border-emerald-600 focus:outline-none transition duration-300 ease-in-out"
                     autocomplete="true"
                 >
@@ -59,12 +68,12 @@
                     </tr>
                 </thead>
                 <tbody id="mountain-table-body">
-                    @forelse($mountains as $mountain)
-                        <tr>
+                    @foreach($mountains as $mountain)
+                        <tr data-id="{{ $mountain->id }}">
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ $mountain->name }}</td>
+                            <td>Mt. {{ $mountain->name }}</td>
                             <td>{{ $mountain->location }}</td>
-                            <td>{{ number_format($mountain->elevation) }} Mdpl</td>
+                            <td>{{ number_format($mountain->elevation, 0, ',', '.') }} Mdpl</td>
                             <td>
                                 <div class="flex items-center gap-2">
                                     @php
@@ -80,21 +89,17 @@
 
 
                                     @if(Auth::user()->id === 1)
-                                        <a href="#" class="flex items-center justify-center w-8 h-8 border border-gray-800 rounded-md focus:outline-none cursor-pointer hover:border-yellow-600 hover:text-yellow-600 transition duration-300 ease-in-out">
+                                        <a href="{{ route('mountain.edit', $mountain->slug) }}" class="flex items-center justify-center w-8 h-8 border border-gray-800 rounded-md focus:outline-none cursor-pointer hover:border-yellow-600 hover:text-yellow-600 transition duration-300 ease-in-out">
                                             <i class="fa-regular fa-pen-to-square"></i>
                                         </a>
-                                        <button class="w-8 h-8 border border-gray-800 rounded-md focus:outline-none cursor-pointer hover:border-red-600 hover:text-red-600 transition duration-300 ease-in-out">
+                                        <button class="delete-mountain w-8 h-8 border border-gray-800 rounded-md focus:outline-none cursor-pointer hover:border-red-600 hover:text-red-600 transition duration-300 ease-in-out" data-id="{{ $mountain->id }}">
                                             <i class="fa-regular fa-trash-can"></i>
                                         </button>
                                     @endif
                                 </div>
                             </td>
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="text-center py-2">No data was found.</td>
-                        </tr>
-                    @endforelse
+                    @endforeach
                 </tbody>
             </table>
             {{-- START MODAL SHOW DETAIL MOUNTAIN --}}
@@ -132,7 +137,7 @@
                             <div class="space-y-2">
                                 <p><strong>Name:</strong> <span x-text="selected.name"></span></p>
                                 <p><strong>Location:</strong> <span x-text="selected.location"></span></p>
-                                <p><strong>Elevation:</strong> <span x-text="selected.elevation + ' Mdpl'"></span></p>
+                                <p><strong>Elevation:</strong> <span x-text="Number(selected.elevation).toLocaleString('id-ID') + ' Mdpl'"></span></p>
                                 <p><strong>Latitude:</strong> <span x-text="selected.latitude"></span></p>
                                 <p><strong>Longitude:</strong> <span x-text="selected.longitude"></span></p>
                             </div>
@@ -175,14 +180,17 @@
             });
 
             document.addEventListener('click', async function (e) {
-                if (e.target.closest('.delete-user')) {
-                    const button = e.target.closest('.delete-user');
+                if (e.target.closest('.delete-mountain')) {
+                    const button = e.target.closest('.delete-mountain');
                     const id = button.dataset.id;
+                    const forceDeleteRoute = "{{ route('mountain.force.delete', ['id' => '__id__']) }}";
 
-                    if (!confirm('Are you sure want to delete this user?')) return;
+                    if (!confirm('Are you sure want to delete this data?')) return;
 
                     try {
-                        const response = await fetch(`/users/${id}`, {
+                        const url = forceDeleteRoute.replace('__id__', id);
+
+                        const response = await fetch(url, {
                             method: 'DELETE',
                             headers: {
                                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -190,16 +198,17 @@
                             }
                         });
 
-                        if (!response.ok) throw new Error("Delete failed!");
+                        if (!response.ok) throw new Error("Force delete failed!");
+
                         const row = $(`tr[data-id="${id}"]`);
                         if (row.length) {
                             row.fadeOut(300, function () {
-                                mountainTables.row(row).remove.draw();
+                                mountainTables.row(row).remove().draw();
                             });
                         }
                     } catch(error) {
-                        console.error("Delete error: ", error);
-                        alert("Failed to delete users!");
+                        console.error("Force delete error: ", error);
+                        alert("Failed to remove users from database!");
                     }
                 }
             })
