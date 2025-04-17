@@ -63,4 +63,9 @@ class User extends Authenticatable
 
         return $slug;
     }
+
+    public function gears()
+    {
+        return $this->hasMany(Gear::class);
+    }
 }

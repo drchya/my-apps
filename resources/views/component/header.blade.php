@@ -3,7 +3,7 @@
     <button @click="sidebarOpen = true" class="lg:hidden text-gray-300 hover:text-white cursor-pointer">
         <i class="fa-solid fa-bars"></i>
     </button>
-    <h2 class="font-semibold text-white text-base">{{ $title }}</h2>
+    <h2 class="font-semibold text-white text-base uppercase">{{ Auth::user()->username ?? "You don't have username" }}</h2>
     @if (session('success'))
         <div
             x-data="{ show: true }"

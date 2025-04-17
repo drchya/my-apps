@@ -4,7 +4,10 @@ namespace Database\Seeders;
 
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Database\Seeders\CategorySeeder;
 use Database\Seeders\MountainSeeder;
+use Database\Seeders\StatusSeeder;
+use Database\Seeders\TypeSeeder;
 use Database\Seeders\UserSeeder;
 use Illuminate\Database\Seeder;
 
@@ -22,7 +25,9 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
         $this->call(UserSeeder::class);
-
         $this->call(MountainSeeder::class);
+        $this->call(TypeSeeder::class);
+        $this->call(CategorySeeder::class);
+        $this->call(StatusSeeder::class);
     }
 }

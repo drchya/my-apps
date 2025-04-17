@@ -1,5 +1,8 @@
 @php
-    $isMountainActive = request()->routeIs('mountain.*');
+    $isMountainActive = request()->routeIs([
+        'mountain.*',
+        'gear.*'
+    ]);
 @endphp
 
 <ul class="mb-2 space-y-2" x-data="{ openMountain: {{ $isMountainActive ? 'true' : 'false' }} }" x-init="$nextTick(() => { openMountain = {{ $isMountainActive ? 'true' : 'false' }} })">
@@ -35,7 +38,7 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="flex items-center gap-2 text-xs px-3 py-2 border-y border-gray-800 text-gray-300 hover:bg-emerald-600 transition duration-300 ease-in-out">
+                <a href="{{ route('gear.index') }}" class="flex items-center gap-2 text-xs px-3 py-2 border-y {{ request()->routeIs('gear.*') ? 'border-emerald-900 text-white bg-emerald-600' : 'border-gray-800 text-gray-300 hover:bg-emerald-600' }} transition duration-300 ease-in-out">
                     <i class="text-xs fa-regular fa-circle"></i> Gear
                 </a>
             </li>
