@@ -17,6 +17,10 @@ select {
     background: none;
 }
 
+option {
+    @apply text-gray-300 outline-gray-700 bg-gray-900 hover:bg-emerald-600 transition duration-200 ease-in-out
+}
+
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;

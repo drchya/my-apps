@@ -4,10 +4,12 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MasterData\GearsController;
 use App\Http\Controllers\MasterData\MountainController;
+use App\Http\Controllers\MasterData\PreparationController;
 use App\Http\Controllers\MasterData\UserController;
 use App\Http\Controllers\TrashBinController;
 use App\Http\Middleware\OnlyAdmin;
 use Illuminate\Support\Facades\Route;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -36,6 +38,10 @@ Route::middleware('auth')->group(function () {
     Route::prefix('gear')->name('gear.')->group(function () {
         Route::resource('', GearsController::class)->parameters(['' => 'gear']);
         Route::delete('${id}/force', [GearsController::class, 'forceDelete'])->name('force.delete');
+    });
+
+    Route::prefix('preparation')->name('preparation.')->group(function () {
+        Route::resource('', PreparationController::class)->parameters(['' => 'preparation']);
     });
 });
 

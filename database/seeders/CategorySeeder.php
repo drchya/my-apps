@@ -14,17 +14,16 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         $categories = [
-            'Clothing',
-            'First Aid',
-            'Navigtaion',
-            'Shelter / Sleeping',
-            'Cooking Gear',
-            'Carrying Gear',
-            'Lighting & Electronics',
-            'Survival Gear',
-            'Water / Hydration',
-            'Health & Fitness',
-            'Other'
+            'Clothing',               // id = 1
+            'Shelter / Sleeping',     // id = 2
+            'Cooking Gear',           // id = 3
+            'Carrying Gear',          // id = 4
+            'Lighting & Electronics', // id = 5
+            'Navigation',             // id = 6
+            'Survival Gear',          // id = 7
+            'Water / Hydration',      // id = 8
+            'First Aid',              // id = 9
+            'Other'                   // id = 10
         ];
 
         foreach ($categories as $category) {

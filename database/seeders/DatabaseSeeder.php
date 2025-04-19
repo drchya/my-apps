@@ -26,8 +26,8 @@ class DatabaseSeeder extends Seeder
         // ]);
         $this->call(UserSeeder::class);
         $this->call(MountainSeeder::class);
-        $this->call(TypeSeeder::class);
         $this->call(CategorySeeder::class);
+        $this->call(TypeSeeder::class);
         $this->call(StatusSeeder::class);
     }
 }

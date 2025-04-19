@@ -1,7 +1,8 @@
 @php
     $isMountainActive = request()->routeIs([
         'mountain.*',
-        'gear.*'
+        'gear.*',
+        'preparation.*'
     ]);
 @endphp
 
@@ -28,7 +29,7 @@
             class="bg-emerald-900/25 origin-top transform border-l-2 border-emerald-600"
         >
             <li>
-                <a href="#" class="flex items-center gap-2 text-xs px-3 py-2 border-y border-gray-800 text-gray-300 hover:bg-emerald-600 transition duration-300 ease-in-out">
+                <a href="{{ route('preparation.index') }}" class="flex items-center gap-2 text-xs px-3 py-2 border-y {{ request()->routeIs('preparation.*') ? 'border-emerald-900 text-white bg-emerald-600' : 'border-gray-800 text-gray-300 hover:bg-emerald-600' }} transition duration-300 ease-in-out">
                     <i class="text-xs fa-regular fa-circle"></i> Preparation
                 </a>
             </li>

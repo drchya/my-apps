@@ -2,11 +2,9 @@
 
 @section('content')
     <div class="px-2">
-        @if (Auth::user()->id === 1)
-            <div class="flex items-center gap-2">
-                <a href="{{ route('gear.create') }}" class="bg-emerald-600 hover:bg-emerald-700 px-2 py-1 rounded text-gray-100 transition duration-300 ease-in-out cursor-pointer">Add Your Gear</a>
-            </div>
-        @endif
+        <div class="flex items-center gap-2">
+            <a href="{{ route('gear.create') }}" class="bg-emerald-600 hover:bg-emerald-700 px-2 py-1 rounded text-gray-100 transition duration-300 ease-in-out cursor-pointer">Add Your Gear</a>
+        </div>
 
         <div
             x-data="

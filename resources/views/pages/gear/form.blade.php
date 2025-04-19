@@ -181,22 +181,3 @@
         </div>
     </div>
 @endsection
-
-@push('scripts')
-    <script>
-        document.querySelector('form').addEventListener('submit', function(e) {
-            var location = document.getElementById('location').value;
-            var regex = /^[a-zA-Z\s]+,\s[a-zA-Z\s]+,\s[a-zA-Z\s]+$/;  // Format: City, Province, Country
-            var errorMessage = document.getElementById('location-error');
-
-            // Reset error message
-            errorMessage.classList.add('hidden');
-
-            // Check if the location matches the format "City, Province, Country"
-            if (!regex.test(location)) {
-                e.preventDefault();  // Prevent form submission
-                errorMessage.classList.remove('hidden');  // Show error message
-            }
-        });
-    </script>
-@endpush
