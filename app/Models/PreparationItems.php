@@ -4,8 +4,9 @@ namespace App\Models;
 
 use App\Models\Gear;
 use App\Models\Preparation;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Type;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class PreparationItems extends Model
 {
@@ -21,5 +22,15 @@ class PreparationItems extends Model
     public function gear()
     {
         return $this->belongsTo(Gear::class);
+    }
+
+    public function type()
+    {
+        return $this->belongsTo(Type::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 }

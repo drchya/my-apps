@@ -1,5 +1,5 @@
 <!-- Mobile Modal Sidebar -->
-<div x-show="sidebarOpen" class="lg:hidden fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-60" x-transition>
+<div x-show="sidebarOpen" class="xl:hidden fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-60" x-transition>
     <div class="bg-gray-800 w-[90%] max-w-lg rounded-lg shadow-xl p-6 relative" @click.outside="sidebarOpen = false">
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-xl font-semibold text-white">MY APPS</h2>
@@ -33,7 +33,7 @@
 </div>
 
 <!-- Desktop Sidebar -->
-<aside class="hidden lg:block md:w-64 bg-gray-800 border-r border-gray-700">
+<aside class="hidden xl:block md:w-64 bg-gray-800 border-r border-gray-700">
     <div class="px-4 py-3">
         <h2 class="text-lg font-bold mb-2 text-white uppercase">my apps</h2>
         <hr class="text-gray-700 mb-2" />

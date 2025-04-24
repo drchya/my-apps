@@ -56,3 +56,11 @@ span .paginate_button {
 .dataTables_paginate.paging_simple_numbers .paginate_button.next:not(.disabled) {
     @apply bg-none border hover:border-emerald-600 hover:bg-emerald-600 rounded-sm transition duration-300 ease-in-out;
 }
+
+.dataTables_wrapper table.dataTable thead tr th {
+    @apply whitespace-nowrap;
+}
+
+.dataTables_wrapper table.dataTable tbody tr td {
+    @apply border-b border-gray-800 py-4 whitespace-nowrap;
+}

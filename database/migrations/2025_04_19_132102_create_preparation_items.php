@@ -22,6 +22,7 @@ return new class extends Migration
             $table->enum('urgency', ['urgent', 'important', 'not_urgent']);
             $table->integer('price')->nullable();
             $table->boolean('is_group')->default(false);
+            $table->boolean('is_selected')->default(false);
             $table->timestamps();
         });
     }

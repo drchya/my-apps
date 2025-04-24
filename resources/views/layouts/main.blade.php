@@ -5,7 +5,7 @@
     <title>Laravel - {{ $title ?? 'Not Found'}}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    @vite(['resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <!-- Font Awesome 5 CDN -->
     <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
     @livewireStyles

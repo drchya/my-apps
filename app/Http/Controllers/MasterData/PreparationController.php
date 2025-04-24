@@ -5,14 +5,15 @@ namespace App\Http\Controllers\MasterData;
 use App\Enums\StyleTrip;
 use App\Enums\TypeTrip;
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Gear;
 use App\Models\Mountain;
 use App\Models\Preparation;
+use App\Models\PreparationItems;
 use App\Models\Type;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use App\Models\Category;
 
 class PreparationController extends Controller
 {
@@ -105,14 +106,19 @@ class PreparationController extends Controller
             $preparation->total_days = 1;
         }
 
+        $preparation_id = $preparation->id;
+
+        $preparation_items = PreparationItems::with(['type', 'preparation'])
+                                            ->where('preparation_id', $preparation_id)
+                                            ->where('is_selected', 1)
+                                            ->get();
         $types = Type::all();
-        $categories = Category::all();
 
         return view('pages.preparation.show', [
             'title' => 'Detail Journey',
             'preparation' => $preparation,
+            'preparation_items' => $preparation_items,
             'types' => $types,
-            'categories' => $categories
         ]);
     }
 

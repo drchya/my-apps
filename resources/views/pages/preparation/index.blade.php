@@ -60,8 +60,6 @@
                     <tr>
                         <th>#</th>
                         <th>Mountain</th>
-                        <th>Via</th>
-                        <th>Total Days</th>
                         <th>Summit Status</th>
                         <th>Actions</th>
                     </tr>
@@ -71,8 +69,6 @@
                         <tr data-id="{{ $preparation->id }}">
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $preparation->mountain->name }}</td>
-                            <td>{{ $preparation->via }}</td>
-                            <td>{{ $preparation->total_days }} Days</td>
                             <td>
                                 @php
                                     $badgeClasses = [
