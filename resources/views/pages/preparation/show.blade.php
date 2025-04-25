@@ -60,82 +60,94 @@
     <hr class="text-gray-800 my-4">
 
     <div class="overflow-x-auto px-2">
-        <div>
+        <div class="flex items-center justify-between mb-2">
             @if (!$preparation_items->isEmpty())
-                <span onclick="document.getElementById('addGearModal').classList.remove('hidden')" class="text-emerald-500 hover:text-white">Add Gear</span>
+                <span
+                    onclick="document.getElementById('addGearModal').classList.remove('hidden')"
+                    class="
+                        px-2 py-1 bg-emerald-600 rounded border border-transparent text-gray-300 font-medium
+                        focus:outline-none focus:ring focus:ring-emerald-600
+                        hover:bg-transparent hover:border-emerald-600
+                        transition duration-300 ease-in-out
+                        cursor-pointer
+                    "
+                >
+                    Add Gear
+                </span>
             @endif
 
             <!-- Modal -->
             <div id="addGearModal" class="hidden fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
-                <div class="bg-gray-900 p-6 rounded-xl w-full max-w-lg shadow-xl">
-                    <h2 class="text-xl font-bold text-white mb-4">Add Gear</h2>
-                    <form action="#" method="POST">
+                <div class="bg-gray-900 p-6 rounded-xl w-full max-w-lg mx-16 shadow-xl">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-xl font-bold text-white">Add Gear</h2>
+                        <button
+                            type="button"
+                            onclick="document.getElementById('addGearModal').classList.add('hidden')"
+                            class="
+                                text-gray-400 text-lg font-bold
+                                hover:text-white
+                                transition duration-200 ease-in-out
+                                cursor-pointer
+                            "
+                        >
+                            ✕
+                        </button>
+                    </div>
+
+                    <hr class="mt-2 mb-3 text-gray-700">
+
+                    <form action="{{ route('preparation.items.update', $preparation->id) }}" method="POST">
                         @csrf
+                        @method('PUT')
+
                         <input type="hidden" name="preparation_id" value="{{ $preparation->id }}">
 
-                        <div class="mb-3">
-                            <label class="text-white">Type</label>
-                            <select name="type_id" class="w-full mt-1 rounded">
-                                @foreach ($types as $type)
-                                    <option value="{{ $type->id }}">{{ $type->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-3 space-y-2 py-6">
+                            @foreach($preparation_items->where('is_selected', 0) as $item_unselect)
+                                <div class="flex items-center">
+                                    <label class="inline-flex items-center space-x-2">
+                                        <input type="hidden" name="gear[{{ $item_unselect->id }}][type_id]" value="{{ $item_unselect->type_id }}">
+                                        <input type="hidden" name="gear[{{ $item_unselect->id }}][selected]" value="0">
+                                        <input type="checkbox" class="hidden peer" name="gear[{{ $item_unselect->id }}][selected]" value="1">
+                                        <span
+                                            class="
+                                                w-4 h-4 border border-gray-600 rounded-sm flex items-center justify-center
+                                                peer-checked:bg-emerald-600 peer-checked:border-emerald-600
+                                                transition duration-200 ease-in-out
+                                                cursor-pointer
+                                            "
+                                        >
+                                            <svg class="hidden w-3 h-3 text-white peer-checked:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </span>
 
-                        <div class="mb-3">
-                            <label class="text-white block">Gear Use Category (Checklist)</label>
-                            @foreach (['tracking', 'summit_attack', 'sleeping', 'on_the_way', 'backup'] as $option)
-                                <label class="inline-flex items-center text-white space-x-2">
-                                    <input type="checkbox" name="category_gear[]" value="{{ $option }}" class="mr-2">
-                                    <span class="capitalize">{{ str_replace('_', ' ', $option) }}</span>
-                                </label><br>
+                                        <span>{{ $item_unselect->type->name }}</span>
+                                    </label>
+                                </div>
                             @endforeach
                         </div>
 
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="text-white">Quantity</label>
-                                <input type="number" name="quantity" class="w-full rounded" min="1" value="1">
-                            </div>
-                            <div>
-                                <label class="text-white">Price</label>
-                                <input type="number" name="price" class="w-full rounded" placeholder="Optional">
-                            </div>
-                        </div>
+                        <hr class="mt-2 mb-3 text-gray-700">
 
-                        <div class="mt-3">
-                            <label class="text-white">Status Gear</label>
-                            <select name="status_gear" class="w-full rounded">
-                                <option value="owned">Owned</option>
-                                <option value="rented">Rented</option>
-                                <option value="not_available">Not Available</option>
-                            </select>
-                        </div>
-
-                        <div class="mt-3">
-                            <label class="text-white">Urgency</label>
-                            <select name="urgency" class="w-full rounded">
-                                <option value="urgent">Urgent</option>
-                                <option value="important">Important</option>
-                                <option value="not_urgent">Not Urgent</option>
-                            </select>
-                        </div>
-
-                        <div class="flex items-center mt-3 text-white">
-                            <input type="checkbox" name="is_group" id="is_group" class="mr-2">
-                            <label for="is_group">Group Gear</label>
-                        </div>
-
-                        <div class="flex justify-end gap-2 mt-4">
-                            <button type="button" onclick="document.getElementById('addGearModal').classList.add('hidden')" class="text-white">Cancel</button>
-                            <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 px-4 py-2 rounded text-white">Save</button>
+                        <div>
+                            <button
+                                type="submit"
+                                class="
+                                    px-2 py-1 bg-yellow-600 text-gray-300 rounded
+                                    hover:bg-yellow-800
+                                    transition duration-300 ease-in-out
+                                    cursor-pointer
+                                "
+                            >
+                                Add Gear
+                            </button>
                         </div>
                     </form>
                 </div>
             </div>
-        </div>
 
-        <div class="flex items-center justify-between mb-2">
             <div>
                 <input
                     type="text"
@@ -174,12 +186,11 @@
                     </thead>
                     <tbody>
                         @if (!$preparation_items->isEmpty())
-                            @foreach($preparation_items as $item)
+                            @foreach($preparation_items->where('is_selected', 1) as $item)
                                 @php $index++ @endphp
                                 <tr class="text-gray-300">
                                     <td>
                                         <label class="inline-flex items-center space-x-2">
-                                            <input type="hidden" name="gear[{{ $item->id }}][selected]" value="0">
                                             <input type="checkbox" class="hidden peer" name="gear[{{ $item->id }}][selected]" value="1">
                                             <span
                                                 class="
@@ -222,15 +233,15 @@
                                                 transition duration-300 ease-in-out
                                             "
                                         >
-                                            <option {{ $item->status_gear == 'not_available' ? 'selected' : '' }}>
+                                            <option value="not_available" {{ $item->status_gear == 'not_available' ? 'selected' : '' }}>
                                                 Not Available
                                                 {{ $item->status_gear == 'not_available' ? '(Default)' : '' }}
                                             </option>
-                                            <option {{ $item->status_gear == 'owned' ? 'selected' : '' }}>
+                                            <option value="owned" {{ $item->status_gear == 'owned' ? 'selected' : '' }}>
                                                 Owned
                                                 {{ $item->status_gear == 'owned' ? '(Default)' : '' }}
                                             </option>
-                                            <option {{ $item->status_gear == 'rented' ? 'selected' : '' }}>
+                                            <option value="rented" {{ $item->status_gear == 'rented' ? 'selected' : '' }}>
                                                 Rented
                                                 {{ $item->status_gear == 'rented' ? '(Default)' : '' }}
                                             </option>
@@ -245,15 +256,15 @@
                                                 transition duration-300 ease-in-out
                                             "
                                         >
-                                            <option {{ $item->urgency == 'not_urgent' ? 'selected' : '' }}>
+                                            <option value="not_urgent" {{ $item->urgency == 'not_urgent' ? 'selected' : '' }}>
                                                 Not Urgent
                                                 {{ $item->urgency == 'not_urgent' ? '(Default)' : '' }}
                                             </option>
-                                            <option {{ $item->urgency == 'urgent' ? 'selected' : '' }}>
+                                            <option value="urgent" {{ $item->urgency == 'urgent' ? 'selected' : '' }}>
                                                 Urgent
                                                 {{ $item->urgency == 'urgent' ? '(Default)' : '' }}
                                             </option>
-                                            <option {{ $item->urgency == 'important' ? 'selected' : '' }}>
+                                            <option value="important" {{ $item->urgency == 'important' ? 'selected' : '' }}>
                                                 Important
                                                 {{ $item->urgency == 'important' ? '(Default)' : '' }}
                                             </option>
@@ -316,15 +327,15 @@
                                                     transition duration-300 ease-in-out
                                                 "
                                             >
-                                                <option {{ $item->status_gear == 'not_available' ? 'selected' : '' }}>
+                                                <option value="not_available" {{ $item->status_gear == 'not_available' ? 'selected' : '' }}>
                                                     Not Available
                                                     {{ $item->status_gear == 'not_available' ? '(Default)' : '' }}
                                                 </option>
-                                                <option {{ $item->status_gear == 'owned' ? 'selected' : '' }}>
+                                                <option value="owned" {{ $item->status_gear == 'owned' ? 'selected' : '' }}>
                                                     Owned
                                                     {{ $item->status_gear == 'owned' ? '(Default)' : '' }}
                                                 </option>
-                                                <option {{ $item->status_gear == 'rented' ? 'selected' : '' }}>
+                                                <option value="rented" {{ $item->status_gear == 'rented' ? 'selected' : '' }}>
                                                     Rented
                                                     {{ $item->status_gear == 'rented' ? '(Default)' : '' }}
                                                 </option>
@@ -333,22 +344,22 @@
                                         <div class="md:hidden">
                                             <label class="block mb-1">Urgency <span class="text-red-500">*</span></label>
                                             <select
-                                                name="gear[{{ $type->id }}][urgency]"
+                                                name="gear[{{ $item->id }}][urgency]"
                                                 class="
                                                     border border-gray-700 rounded px-2 py-1 text-gray-300
                                                     focus:outline-none focus:border-emerald-600 focus:ring focus:ring-emerald-600
                                                     transition duration-300 ease-in-out
                                                 "
                                             >
-                                                <option {{ $item->urgency == 'not_urgent' ? 'selected' : '' }}>
+                                                <option value="not_urgent" {{ $item->urgency == 'not_urgent' ? 'selected' : '' }}>
                                                     Not Urgent
                                                     {{ $item->urgency == 'not_urgent' ? '(Default)' : '' }}
                                                 </option>
-                                                <option {{ $item->urgency == 'urgent' ? 'selected' : '' }}>
+                                                <option value="urgent" {{ $item->urgency == 'urgent' ? 'selected' : '' }}>
                                                     Urgent
                                                     {{ $item->urgency == 'urgent' ? '(Default)' : '' }}
                                                 </option>
-                                                <option {{ $item->urgency == 'important' ? 'selected' : '' }}>
+                                                <option value="important" {{ $item->urgency == 'important' ? 'selected' : '' }}>
                                                     Important
                                                     {{ $item->urgency == 'important' ? '(Default)' : '' }}
                                                 </option>
@@ -358,7 +369,7 @@
                                             <label for="price" class="block mb-1">Price</label>
                                             <input
                                                 id="price"
-                                                name="gear[{{ $type->id }}][price]"
+                                                name="gear[{{ $item->id }}][price]"
                                                 value="{{ $item->price }}"
                                                 class="
                                                     border border-gray-700 rounded px-2 py-1 text-gray-300
@@ -573,8 +584,8 @@
                                 <button
                                     type="submit"
                                     class="
-                                        mb-1 px-2 py-1 text-xs border border-gray-700 rounded text-gray-300
-                                        {{ $isUpdate ? 'hover:bg-yellow-600 hover:border-yellow-600 hover:ring hover:ring-yellow-600' : 'hover:bg-emerald-600 hover:border-emerald-600 hover:ring hover:ring-emerald-600' }}
+                                        mb-1 px-2 py-1 text-xs font-medium border border-yellow-600 rounded text-gray-300
+                                        {{ $isUpdate ? 'bg-yellow-600 hover:bg-yellow-800 hover:border-yellow-800 hover:ring hover:ring-yellow-800' : 'hover:bg-emerald-600 hover:border-emerald-600 hover:ring hover:ring-emerald-600' }}
                                         transition duration-300 ease-in-out
                                         cursor-pointer
                                     "

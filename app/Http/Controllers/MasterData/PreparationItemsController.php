@@ -64,6 +64,43 @@ class PreparationItemsController extends Controller
 
     public function update(Request $request, string $preparation_id)
     {
-        dd($request);
+        $gearItems = $request->input('gear', []);
+
+        foreach ($gearItems as $itemId => $itemData) {
+            $item = PreparationItems::find($itemId);
+
+            $updateData = [];
+
+            if (array_key_exists('selected', $itemData)) {
+                $updateData['is_selected'] = $itemData['selected'] == 1 ? 1 : 0;
+            }
+
+            if (isset($itemData['type_id'])) {
+                $updateData['type_id'] = $itemData['type_id'];
+            }
+
+            if (isset($itemData['category_gear'])) {
+                $updateData['category_gear'] = json_encode($itemData['category_gear']);
+            }
+
+            if (isset($itemData['status_gear'])) {
+                $updateData['status_gear'] = strtolower(str_replace(' ', '_', $itemData['status_gear'] ?? ''));
+            }
+
+            if (isset($itemData['urgency'])) {
+                $updateData['urgency'] = strtolower(str_replace(' ', '_', $itemData['urgency'] ?? ''));
+            }
+
+            if (isset($itemData['price'])) {
+                $updateData['price'] = is_numeric($itemData['price'] ?? null) ? $itemData['price'] : 0;
+            }
+
+            if (isset($itemData['quantity'])) {
+                $updateData['quantity'] = is_numeric($itemData['quantity'] ?? null) ? $itemData['quantity'] : 0;
+            }
+
+            $item->update($updateData);
+        }
+        return redirect()->back()->with('message', 'Gear has been updated.');
     }
 }

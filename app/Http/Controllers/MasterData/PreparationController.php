@@ -109,8 +109,9 @@ class PreparationController extends Controller
         $preparation_id = $preparation->id;
 
         $preparation_items = PreparationItems::with(['type', 'preparation'])
+                                            ->join('types', 'preparation_items.type_id', '=', 'types.id')
                                             ->where('preparation_id', $preparation_id)
-                                            ->where('is_selected', 1)
+                                            ->orderBy('types.name', 'asc')
                                             ->get();
         $types = Type::all();
 
