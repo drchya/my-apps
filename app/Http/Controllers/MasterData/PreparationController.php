@@ -22,7 +22,9 @@ class PreparationController extends Controller
      */
     public function index()
     {
-        $preparations = Preparation::with('mountain')->get();
+        $preparations = Preparation::with(['mountain', 'user'])
+                                    ->where('user_id', auth()->id())
+                                    ->get();
 
         foreach ($preparations as $preparation) {
             if ($preparation->departure_date && $preparation->return_date) {
@@ -95,8 +97,9 @@ class PreparationController extends Controller
     {
         Carbon::setLocale('id');
 
-        $preparation = Preparation::with('mountain')
+        $preparation = Preparation::with(['user', 'mountain'])
                                     ->where('slug', $slug)
+                                    ->where('user_id', auth()->id())
                                     ->firstOrFail();
 
         if ($preparation->departure_date && $preparation->return_date) {

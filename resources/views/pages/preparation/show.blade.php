@@ -67,7 +67,7 @@
                     class="
                         px-2 py-1 bg-emerald-600 rounded border border-transparent text-gray-300 font-medium
                         focus:outline-none focus:ring focus:ring-emerald-600
-                        hover:bg-transparent hover:border-emerald-600
+                        hover:bg-emerald-800 hover:border-emerald-800
                         transition duration-300 ease-in-out
                         cursor-pointer
                     "
@@ -103,7 +103,7 @@
 
                         <input type="hidden" name="preparation_id" value="{{ $preparation->id }}">
 
-                        <div class="grid grid-cols-2 md:grid-cols-3 space-y-2 py-6">
+                        <div class="grid grid-cols-2 md:grid-cols-3 space-y-2">
                             @foreach($preparation_items->where('is_selected', 0) as $item_unselect)
                                 <div class="flex items-center">
                                     <label class="inline-flex items-center space-x-2">
@@ -176,7 +176,10 @@
                 <table id="preparation-item" class="border border-gray-800 shadow-lg rounded overflow-auto mb-4 w-full text-sm">
                     <thead class="bg-gray-800 text-gray-300">
                         <tr>
-                            <th>Checklist</th>
+                            <th>#</th>
+                            @if (!$preparation_items->isEmpty())
+                                <th>Checked</th>
+                            @endif
                             <th>Gear</th>
                             <th>Quantity</th>
                             <th class="hidden lg:table-cell">Status Gear</th>
@@ -205,6 +208,32 @@
                                             </span>
                                         </label>
                                     </td>
+
+                                    <td>
+                                        <label class="inline-flex items-center space-x-2" title="Tandai sebagai sudah disiapkan">
+                                            <input type="hidden" name="gear[{{ $item->id }}][checked]" value="0">
+
+                                            <input
+                                                type="checkbox"
+                                                class="hidden peer"
+                                                name="gear[{{ $item->id }}][checked]"
+                                                value="1"
+                                                {{ $item->is_checked ? 'checked' : '' }}
+                                            >
+                                            <span
+                                                class="
+                                                    w-4 h-4 border border-gray-600 rounded-sm flex items-center justify-center
+                                                    peer-checked:bg-blue-600 peer-checked:border-blue-600
+                                                    transition duration-200 ease-in-out
+                                                "
+                                            >
+                                                <svg class="hidden w-3 h-3 text-white peer-checked:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                                </svg>
+                                            </span>
+                                        </label>
+                                    </td>
+
                                     <td>
                                         <input type="hidden" name="gear[{{ $item->id }}][type_id]" value="{{ $item->id }}">
                                         {{ $item->type->name }}
@@ -226,12 +255,14 @@
 
                                     <td class="hidden lg:table-cell">
                                         <select
+                                            id="status_gear_desktop_{{ $item->id }}"
                                             name="gear[{{ $item->id }}][status_gear]"
                                             class="
                                                 border border-gray-700 rounded px-2 py-1 text-gray-300
                                                 focus:outline-none focus:border-emerald-600 focus:ring focus:ring-emerald-600
                                                 transition duration-300 ease-in-out
                                             "
+                                            onchange="syncStatusGear('{{ $item->id }}', 'desktop')"
                                         >
                                             <option value="not_available" {{ $item->status_gear == 'not_available' ? 'selected' : '' }}>
                                                 Not Available
@@ -247,14 +278,18 @@
                                             </option>
                                         </select>
                                     </td>
+
                                     <td class="hidden lg:table-cell">
                                         <select
+                                            id="urgency_gear_desktop_{{ $item->id }}"
                                             name="gear[{{ $item->id }}][urgency]"
                                             class="
                                                 border border-gray-700 rounded px-2 py-1 text-gray-300
                                                 focus:outline-none focus:border-emerald-600 focus:ring focus:ring-emerald-600
+                                                hidden lg:block
                                                 transition duration-300 ease-in-out
                                             "
+                                            onchange="syncUrgencyGear('{{ $item->id }}', 'desktop')"
                                         >
                                             <option value="not_urgent" {{ $item->urgency == 'not_urgent' ? 'selected' : '' }}>
                                                 Not Urgent
@@ -271,9 +306,20 @@
                                         </select>
                                     </td>
 
-                                    {{-- Modal trigger on mobile --}}
                                     <td class="text-center">
-                                        <button type="button" onclick="document.getElementById('modal-{{ $index }}').classList.remove('hidden')" class="text-emerald-500 underline">Detail</button>
+                                        <button
+                                            type="button"
+                                            onclick="document.getElementById('modal-{{ $index }}').classList.remove('hidden')"
+                                            class="
+                                                h-6 w-6 border border-blue-600 text-blue-600 text-xs
+                                                cursor-pointer rounded
+                                                md:border-gray-700 md:text-gray-700 md:hover:border-blue-600 md:hover:bg-blue-600 md:hover:text-gray-300
+                                                focus:outline-none focus:ring focus:ring-blue-600
+                                                transition duration-300 ease-in-out
+                                            "
+                                        >
+                                            <i class="fa-solid fa-info"></i>
+                                        </button>
                                     </td>
                                 </tr>
 
@@ -320,12 +366,15 @@
                                         <div class="md:hidden">
                                             <label class="block mb-1">Status Gear <span class="text-red-500">*</span></label>
                                             <select
+                                                id="status_gear_mobile_{{ $item->id }}"
                                                 name="gear[{{ $item->id }}][status_gear]"
                                                 class="
                                                     border border-gray-700 rounded px-2 py-1 text-gray-300
+                                                    w-full
                                                     focus:outline-none focus:border-emerald-600 focus:ring focus:ring-emerald-600
                                                     transition duration-300 ease-in-out
                                                 "
+                                                onchange="syncStatusGear('{{ $item->id }}', 'mobile')"
                                             >
                                                 <option value="not_available" {{ $item->status_gear == 'not_available' ? 'selected' : '' }}>
                                                     Not Available
@@ -341,15 +390,19 @@
                                                 </option>
                                             </select>
                                         </div>
+
                                         <div class="md:hidden">
                                             <label class="block mb-1">Urgency <span class="text-red-500">*</span></label>
                                             <select
+                                                id="urgency_gear_mobile_{{ $item->id }}"
                                                 name="gear[{{ $item->id }}][urgency]"
                                                 class="
                                                     border border-gray-700 rounded px-2 py-1 text-gray-300
+                                                    w-full
                                                     focus:outline-none focus:border-emerald-600 focus:ring focus:ring-emerald-600
                                                     transition duration-300 ease-in-out
                                                 "
+                                                onchange="syncUrgencyGear('{{ $item->id }}', 'mobile')"
                                             >
                                                 <option value="not_urgent" {{ $item->urgency == 'not_urgent' ? 'selected' : '' }}>
                                                     Not Urgent
@@ -373,17 +426,36 @@
                                                 value="{{ $item->price }}"
                                                 class="
                                                     border border-gray-700 rounded px-2 py-1 text-gray-300
-                                                    w-18 md:w-full
+                                                    w-full
                                                     focus:outline-none focus:border-emerald-600 focus:ring focus:ring-emerald-600
                                                     transition duration-300 ease-in-out
                                                 "
                                             >
                                         </div>
+
                                         <div>
                                             <label class="block mb-1">Group Item?</label>
                                             <label class="inline-flex items-center space-x-2">
+                                                <input type="hidden" name="gear[{{ $item->id }}][is_group]" value="0">
                                                 <input type="checkbox" class="hidden peer" name="gear[{{ $item->id }}][is_group]"
                                                     @if($item->is_group == 1) checked @endif>
+                                                <span
+                                                    class="w-4 h-4 border border-gray-600 rounded-sm flex items-center justify-center
+                                                    peer-checked:bg-emerald-600 peer-checked:border-emerald-600
+                                                    transition duration-200 ease-in-out"
+                                                >
+                                                    <svg class="hidden w-3 h-3 text-white peer-checked:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                                    </svg>
+                                                </span>
+                                            </label>
+                                        </div>
+
+                                        <div>
+                                            <p class="text-xs text-red-700 font-medium">Please checklist if you want to remove!</p>
+                                            <label class="block mb-1">Do you want to remove this items?</label>
+                                            <label class="inline-flex items-center space-x-2">
+                                                <input type="checkbox" class="hidden peer" name="gear[{{ $item->id }}][remove]" value="1">
                                                 <span
                                                     class="w-4 h-4 border border-gray-600 rounded-sm flex items-center justify-center
                                                     peer-checked:bg-emerald-600 peer-checked:border-emerald-600
@@ -512,13 +584,14 @@
                                                 @endforeach
                                             </div>
                                         </div>
-                                        <div class="md:hidden">
+                                        <div class="lg:hidden">
                                             <label class="block mb-1">Status Gear <span class="text-red-500">*</span></label>
                                             <select
                                                 name="gear[{{ $type->id }}][status_gear]"
                                                 class="
                                                     border border-gray-700 rounded px-2 py-1 text-gray-300
                                                     focus:outline-none focus:border-emerald-600 focus:ring focus:ring-emerald-600
+                                                    lg:hidden
                                                     transition duration-300 ease-in-out
                                                 "
                                             >
@@ -584,8 +657,8 @@
                                 <button
                                     type="submit"
                                     class="
-                                        mb-1 px-2 py-1 text-xs font-medium border border-yellow-600 rounded text-gray-300
-                                        {{ $isUpdate ? 'bg-yellow-600 hover:bg-yellow-800 hover:border-yellow-800 hover:ring hover:ring-yellow-800' : 'hover:bg-emerald-600 hover:border-emerald-600 hover:ring hover:ring-emerald-600' }}
+                                        mb-1 px-2 py-1 text-xs font-medium border rounded text-gray-300
+                                        {{ $isUpdate ? 'border-yellow-600 bg-yellow-600 hover:bg-yellow-800 hover:border-yellow-800 hover:ring hover:ring-yellow-800' : 'border-emerald-600 bg-emerald-600 hover:bg-emerald-800 hover:border-emerald-800 hover:ring hover:ring-emerald-800' }}
                                         transition duration-300 ease-in-out
                                         cursor-pointer
                                     "
@@ -621,5 +694,34 @@
                 preparationsTables.search(this.value).draw();
             });
         });
+
+        // Fungsi untuk menyinkronkan nilai antara form mobile dan desktop
+        function syncStatusGear(itemId, formType) {
+            const mobileSelect = document.getElementById(`status_gear_mobile_${itemId}`);
+            const desktopSelect = document.getElementById(`status_gear_desktop_${itemId}`);
+
+            // Jika yang berubah adalah form mobile, perbarui form desktop
+            if (formType === 'mobile') {
+                desktopSelect.value = mobileSelect.value;
+            }
+            // Jika yang berubah adalah form desktop, perbarui form mobile
+            else if (formType === 'desktop') {
+                mobileSelect.value = desktopSelect.value;
+            }
+        }
+
+        function syncUrgencyGear(itemId, formType) {
+            const mobileSelect = document.getElementById(`urgency_gear_mobile_${itemId}`);
+            const desktopSelect = document.getElementById(`urgency_gear_desktop_${itemId}`);
+
+            // Jika yang berubah adalah form mobile, perbarui form desktop
+            if (formType === 'mobile') {
+                desktopSelect.value = mobileSelect.value;
+            }
+            // Jika yang berubah adalah form desktop, perbarui form mobile
+            else if (formType === 'desktop') {
+                mobileSelect.value = desktopSelect.value;
+            }
+        }
     </script>
 @endpush

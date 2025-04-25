@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('price')->nullable();
             $table->boolean('is_group')->default(false);
             $table->boolean('is_selected')->default(false);
+            $table->boolean('is_checked')->default(false);
             $table->timestamps();
         });
     }
