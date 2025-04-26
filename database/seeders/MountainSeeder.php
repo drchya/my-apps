@@ -24,6 +24,38 @@ class MountainSeeder extends Seeder
                 'elevation' => 3078
             ],
             [
+                'name' => 'Sagara',
+                'slug' => Str::random(8),
+                'location' => 'Garut, Jawa Barat, Indonesia',
+                'latitude' => -7.2227,
+                'longitude' => 108.0584,
+                'elevation' => 2132
+            ],
+            [
+                'name' => 'Cikuray',
+                'slug' => Str::random(8),
+                'location' => 'Garut, Jawa Barat, Indonesia',
+                'latitude' => -7.3225,
+                'longitude' => 107.8600,
+                'elevation' => 2818
+            ],
+            [
+                'name' => 'Papandayan',
+                'slug' => Str::random(8),
+                'location' => 'Garut, Jawa Barat, Indonesia',
+                'latitude' => -7.3193,
+                'longitude' => 107.7310,
+                'elevation' => 2665
+            ],
+            [
+                'name' => 'Guntur',
+                'slug' => Str::random(8),
+                'location' => 'Garut, Jawa Barat, Indonesia',
+                'latitude' => -7.1059,
+                'longitude' => 107.8375,
+                'elevation' => 2249
+            ],
+            [
                 'name' => 'Gede',
                 'slug' => Str::random(8),
                 'location' => 'Cianjur, Jawa Barat, Indonesia',

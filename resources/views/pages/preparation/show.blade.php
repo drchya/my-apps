@@ -40,21 +40,56 @@
     </div>
 
     <div class="px-2">
-        <h1 class="text-gray-50 text-xl md:text-2xl uppercase font-bold">Mt. {{ $preparation->mountain->name }}</h1>
-        <p>{{ number_format($preparation->mountain->elevation, 0, ',', '.') }} Mdpl</p>
-        <p>{{ $preparation->mountain->location }}</p>
+        <h1 class="text-gray-50 text-xl md:text-2xl uppercase font-extrabold">Mt. {{ $preparation->mountain->name }}</h1>
+
+        <p class="flex items-center gap-2 text-gray-400 font-medium mb-1">
+            <span class="flex w-4 items-center justify-center">
+                <i class="fa-solid fa-mountain text-yellow-900"></i>
+            </span>
+            {{ number_format($preparation->mountain->elevation, 0, ',', '.') }} Mdpl
+        </p>
+
+        <p class="flex items-center gap-2 text-gray-400 font-medium mb-1">
+            <span class="flex w-4 items-center justify-center">
+                <i class="fa-solid fa-map-pin text-red-600"></i>
+            </span>
+            {{ $preparation->mountain->location }}
+        </p>
         @php
             use Carbon\Carbon;
 
-            $departure = Carbon::parse($preparation->departure_date)->translatedFormat('l, d F Y');
-            $return = Carbon::parse($preparation->return_date)->translatedFormat('l, d F Y');
+            $departure = Carbon::parse($preparation->departure_date)->translatedFormat('d F');
+            $return = Carbon::parse($preparation->return_date)->translatedFormat('d F Y');
         @endphp
-        <p>{{ $departure }} - {{ $return }}</p>
-        <p>{{ $preparation->total_days }} Days</p>
-        <p>Total Budget: Rp{{ number_format($preparation->budget_estimate, 0, ',', '.') }}</p>
-        <div class="flex items-center gap-2">
-            <a href="{{ route('preparation.index') }}" class="text-gray-500 hover:text-emerald-600 transition duration-300 ease-in-out">Back to Table</a>
+        <p class="flex items-center gap-2 text-gray-400 font-medium mb-1">
+            <span class="flex w-4 items-center justify-center">
+                <i class="fa-regular fa-calendar text-red-400"></i>
+            </span>
+            {{ $departure }} - {{ $return }} ({{ $preparation->total_days }} Days)
+        </p>
+
+        <p class="flex items-center gap-2 text-gray-400 font-medium">
+            <span class="flex w-4 items-center justify-center">
+                <i class="fa-solid fa-dollar-sign text-green-600"></i>
+            </span>
+            Total Budget: Rp{{ number_format($preparation->budget_estimate, 0, ',', '.') }}
+        </p>
+
+        <div class="flex items-center my-2 gap-2">
+            <a href="{{ route('preparation.logistics.index', $preparation->slug) }}" class="flex items-center gap-1 text-yellow-600 font-medium hover:text-yellow-800 transition duration-300 ease-in-out">
+                <span class="flex w-4 items-center justify-center">
+                    <i class="fa-solid fa-box"></i>
+                </span>
+                Logistic
+            </a>
+            <a href="#" class="flex items-center gap-1 text-blue-600 font-medium hover:text-blue-800 transition duration-300 ease-in-out">
+                <span class="flex w-4 items-center justify-center">
+                    <i class="fa-solid fa-car-side"></i>
+                </span>
+                Transportation
+            </a>
         </div>
+        <a href="{{ route('preparation.index') }}" class="mt-1 w-full text-emerald-600 font-medium hover:text-emerald-800 transition duration-300 ease-in-out">Back to Table</a>
     </div>
 
     <hr class="text-gray-800 my-4">
@@ -173,15 +208,25 @@
                 @endif
                 <input type="hidden" name="preparation_id" value="{{ $preparation->id }}">
                 @php $index = 0; @endphp
-                <table id="preparation-item" class="border border-gray-800 shadow-lg rounded overflow-auto mb-4 w-full text-sm">
+                <table id="preparation-item" class="border border-gray-800 shadow-lg rounded overflow-auto mb-4 w-full">
                     <thead class="bg-gray-800 text-gray-300">
                         <tr>
                             <th>#</th>
                             @if (!$preparation_items->isEmpty())
-                                <th>Checked</th>
+                                <th>
+                                    <span class="hidden md:block">
+                                        Checked
+                                    </span>
+                                    <div class="md:hidden">
+                                        <i class="fa-regular fa-square-check"></i>
+                                    </div>
+                                </th>
                             @endif
                             <th>Gear</th>
-                            <th>Quantity</th>
+                            <th>
+                                <span class="hidden md:block">Quantity</span>
+                                <span class="md:hidden">Qty</span>
+                            </th>
                             <th class="hidden lg:table-cell">Status Gear</th>
                             <th class="hidden lg:table-cell">Urgency</th>
                             <th>More</th>
@@ -246,7 +291,7 @@
                                             min="1"
                                             class="
                                                 border border-gray-700 rounded px-2 py-1 text-gray-300
-                                                w-18 md:w-full
+                                                w-10 md:w-full
                                                 focus:outline-none focus:border-emerald-600 focus:ring focus:ring-emerald-600
                                                 transition duration-300 ease-in-out
                                             "
@@ -311,11 +356,11 @@
                                             type="button"
                                             onclick="document.getElementById('modal-{{ $index }}').classList.remove('hidden')"
                                             class="
-                                                h-6 w-6 border border-blue-600 text-blue-600 text-xs
-                                                cursor-pointer rounded
-                                                md:border-gray-700 md:text-gray-700 md:hover:border-blue-600 md:hover:bg-blue-600 md:hover:text-gray-300
-                                                focus:outline-none focus:ring focus:ring-blue-600
+                                                flex items-center justify-center w-8 h-8 border border-gray-800 rounded-md
+                                                focus:outline-none
+                                                bg-blue-600 md:bg-transparent md:hover:border-blue-600 md:hover:text-blue-600
                                                 transition duration-300 ease-in-out
+                                                cursor-pointer
                                             "
                                         >
                                             <i class="fa-solid fa-info"></i>

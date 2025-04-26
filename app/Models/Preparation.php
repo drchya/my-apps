@@ -52,4 +52,9 @@ class Preparation extends Model
     {
         return $this->hasMany(PreparationItem::class);
     }
+
+    public function logistics()
+    {
+        return $this->hasMany(Logistic::class);
+    }
 }

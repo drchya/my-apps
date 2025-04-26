@@ -2,7 +2,9 @@
 
 @section('content')
     <div class="px-2">
-        <div class="flex items-center gap-2">
+        <div class="flex items-center justify-between">
+            <p class="uppercase font-bold text-2xl">Data {{ $title }}</p>
+
             <a href="{{ route('gear.create') }}" class="bg-emerald-600 hover:bg-emerald-700 px-2 py-1 rounded text-gray-100 transition duration-300 ease-in-out cursor-pointer">Add Your Gear</a>
         </div>
 
@@ -35,8 +37,7 @@
     <div class="overflow-x-auto px-2">
         <div class="flex items-center justify-between mb-2">
             <div class="flex items-center gap-2">
-                <span>Show Data</span>
-                <select id="customLength" class="bg-gray-800 border border-gray-600 text-gray-600 rounded px-2 py-1 focus:outline-none focus:border-emerald-600 focus:text-gray-300 transition duration-300 ease-in-out">
+                <select id="customLength" class="border border-gray-600 text-gray-300 rounded px-2 py-1 focus:outline-none focus:border-emerald-600 focus:text-gray-300 transition duration-300 ease-in-out">
                     <option value="10" selected>10</option>
                     <option value="25">25</option>
                     <option value="50">50</option>
@@ -47,8 +48,8 @@
                 <input
                     type="text"
                     id="customSearch"
-                    placeholder="Search mountain..."
-                    class="bg-gray-800 border border-gray-600 text-gray-300 rounded px-2 py-1 focus:border-emerald-600 focus:outline-none transition duration-300 ease-in-out"
+                    placeholder="Search gear..."
+                    class="border border-gray-600 text-gray-300 rounded px-2 py-1 focus:border-emerald-600 focus:outline-none transition duration-300 ease-in-out"
                     autocomplete="true"
                 >
             </div>
@@ -60,8 +61,8 @@
                     <tr>
                         <th>#</th>
                         <th>Brand</th>
-                        <th>Price</th>
-                        <th>Category</th>
+                        <th class="hidden lg:table-cell">Price</th>
+                        <th class="hidden lg:table-cell">Category</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
@@ -71,23 +72,23 @@
                         <tr data-id="{{ $gear->id }}">
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $gear->brand }}</td>
-                            <td>Rp{{ number_format($gear->price, 0, ',', '.') }}</td>
-                            <td>{{ $gear->category->name }}</td>
+                            <td class="hidden lg:table-cell">Rp{{ number_format($gear->price, 0, ',', '.') }}</td>
+                            <td class="hidden lg:table-cell">{{ $gear->category->name }}</td>
                             <td>
                                 @php
                                     $badgeClasses = [
-                                        'not_purchased'    => 'bg-gray-600 text-gray-100',
-                                        'in_wishlist'      => 'bg-gray-700 text-gray-200',
-                                        'purchased'        => 'bg-emerald-600 text-white',
-                                        'ready_to_use'     => 'bg-blue-500 text-white',
-                                        'in_use'           => 'bg-indigo-500 text-white',
-                                        'damaged'          => 'bg-red-600 text-white',
-                                        'lost'             => 'bg-orange-600 text-white',
-                                        'need_replacement' => 'bg-yellow-400 text-black',
+                                        'not_purchased'    => 'text-gray-600',
+                                        'in_wishlist'      => 'text-cyan-600',
+                                        'purchased'        => 'text-emerald-600',
+                                        'ready_to_use'     => 'text-blue-600',
+                                        'in_use'           => 'text-indigo-600',
+                                        'damaged'          => 'text-red-600',
+                                        'lost'             => 'text-orange-600',
+                                        'need_replacement' => 'text-yellow-600',
                                     ];
                                 @endphp
 
-                                <span class="px-2 py-1 rounded text-sm font-medium {{ $badgeClasses[$gear->status->slug] ?? 'bg-gray-500 text-white' }}">
+                                <span class="font-medium {{ $badgeClasses[$gear->status->slug] ?? 'text-white' }}">
                                     {{ $gear->status->name }}
                                 </span>
                             </td>
@@ -99,17 +100,42 @@
 
                                     <button
                                         @click='showModal = true; selected = {!! $encodedGears !!}'
-                                        class="w-8 h-8 border border-gray-800 rounded-md focus:outline-none cursor-pointer hover:border-cyan-600 hover:text-cyan-600 transition duration-300 ease-in-out"
+                                        class="
+                                            flex items-center justify-center w-8 h-8 border border-gray-800 rounded-md
+                                            focus:outline-none
+                                            bg-blue-600 md:bg-transparent md:hover:border-blue-600 md:hover:text-blue-600
+                                            transition duration-300 ease-in-out
+                                            cursor-pointer
+                                        "
                                     >
                                         <i class="fa-solid fa-info"></i>
                                     </button>
 
 
                                     @if(Auth::user()->id === 1)
-                                        <a href="{{ route('gear.edit', $gear->slug) }}" class="flex items-center justify-center w-8 h-8 border border-gray-800 rounded-md focus:outline-none cursor-pointer hover:border-yellow-600 hover:text-yellow-600 transition duration-300 ease-in-out">
+                                        <a
+                                            href="{{ route('gear.edit', $gear->slug) }}"
+                                            class="
+                                                flex items-center justify-center w-8 h-8 border border-gray-800 rounded-md
+                                                focus:outline-none
+                                                bg-yellow-600 md:bg-transparent md:hover:border-yellow-600 md:hover:text-yellow-600
+                                                transition duration-300 ease-in-out
+                                                cursor-pointer
+                                            "
+                                        >
                                             <i class="fa-regular fa-pen-to-square"></i>
                                         </a>
-                                        <button class="delete-gear w-8 h-8 border border-gray-800 rounded-md focus:outline-none cursor-pointer hover:border-red-600 hover:text-red-600 transition duration-300 ease-in-out" data-id="{{ $gear->id }}">
+                                        <button
+                                            class="
+                                                delete-gear
+                                                flex items-center justify-center w-8 h-8 border border-gray-800 rounded-md
+                                                focus:outline-none
+                                                bg-red-600 md:bg-transparent md:hover:border-red-600 md:hover:text-red-600
+                                                transition duration-300 ease-in-out
+                                                cursor-pointer
+                                            "
+                                            data-id="{{ $gear->id }}"
+                                        >
                                             <i class="fa-regular fa-trash-can"></i>
                                         </button>
                                     @endif
@@ -161,14 +187,14 @@
                                     <span
                                         x-text="selected.status.name"
                                         :class="{
-                                            'bg-gray-600 text-gray-100 px-2 py-1 rounded text-sm font-medium': selected.status.slug === 'not_purchased',
-                                            'bg-gray-700 text-gray-200 px-2 py-1 rounded text-sm font-medium': selected.status.slug === 'in_wishlist',
-                                            'bg-emerald-600 text-white px-2 py-1 rounded text-sm font-medium': selected.status.slug === 'purchased',
-                                            'bg-blue-500 text-white px-2 py-1 rounded text-sm font-medium': selected.status.slug === 'ready_to_use',
-                                            'bg-indigo-500 text-white px-2 py-1 rounded text-sm font-medium': selected.status.slug === 'in_use',
-                                            'bg-red-600 text-white px-2 py-1 rounded text-sm font-medium': selected.status.slug === 'damaged',
-                                            'bg-orange-600 text-white px-2 py-1 rounded text-sm font-medium': selected.status.slug === 'lost',
-                                            'bg-yellow-400 text-black px-2 py-1 rounded text-sm font-medium': selected.status.slug === 'need_replacement',
+                                            'text-gray-600 font-medium': selected.status.slug === 'not_purchased',
+                                            'text-cyan-600 font-medium': selected.status.slug === 'in_wishlist',
+                                            'text-emerald-600 font-medium': selected.status.slug === 'purchased',
+                                            'text-blue-600 font-medium': selected.status.slug === 'ready_to_use',
+                                            'text-indigo-600 font-medium': selected.status.slug === 'in_use',
+                                            'text-red-600 font-medium': selected.status.slug === 'damaged',
+                                            'text-orange-600 font-medium': selected.status.slug === 'lost',
+                                            'text-yellow-600 font-medium': selected.status.slug === 'need_replacement',
                                         }"
                                     ></span>
                                 </p>

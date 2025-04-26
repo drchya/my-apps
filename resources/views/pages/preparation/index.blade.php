@@ -2,8 +2,12 @@
 
 @section('content')
     <div class="px-2">
-        <div class="flex items-center gap-2">
-            <a href="{{ route('preparation.create') }}" class="bg-emerald-600 hover:bg-emerald-700 px-2 py-1 rounded text-gray-100 transition duration-300 ease-in-out cursor-pointer">Add Your Prepared</a>
+        <div class="flex items-center justify-between">
+            <p class="uppercase font-bold text-2xl">This is your journey</p>
+
+            <div class="flex items-center gap-2">
+                <a href="{{ route('preparation.create') }}" class="bg-emerald-600 hover:bg-emerald-700 px-2 py-1 rounded text-gray-100 transition duration-300 ease-in-out cursor-pointer">Add Your Prepared</a>
+            </div>
         </div>
 
         <div
@@ -35,8 +39,7 @@
     <div class="overflow-x-auto px-2">
         <div class="flex items-center justify-between mb-2">
             <div class="flex items-center gap-2">
-                <span>Show Data</span>
-                <select id="customLength" class="bg-gray-800 border border-gray-600 text-gray-600 rounded px-2 py-1 focus:outline-none focus:border-emerald-600 focus:text-gray-300 transition duration-300 ease-in-out">
+                <select id="customLength" class="border border-gray-600 text-gray-300 rounded px-2 py-1 focus:outline-none focus:border-emerald-600 focus:text-gray-300 transition duration-300 ease-in-out">
                     <option value="10" selected>10</option>
                     <option value="25">25</option>
                     <option value="50">50</option>
@@ -48,7 +51,7 @@
                     type="text"
                     id="customSearch"
                     placeholder="Search Destination..."
-                    class="bg-gray-800 border border-gray-600 text-gray-300 rounded px-2 py-1 focus:border-emerald-600 focus:outline-none transition duration-300 ease-in-out"
+                    class="border border-gray-600 text-gray-300 rounded px-2 py-1 focus:border-emerald-600 focus:outline-none transition duration-300 ease-in-out"
                     autocomplete="true"
                 >
             </div>
@@ -84,13 +87,27 @@
                                     <a
                                         href="{{ route('preparation.show', $preparation->slug) }}"
                                         class="
-                                            flex items-center justify-center w-8 h-8 border border-gray-800 rounded-md focus:outline-none cursor-pointer hover:border-cyan-600 hover:text-cyan-600 transition duration-300 ease-in-out
+                                            flex items-center justify-center w-8 h-8 border border-gray-800 rounded-md
+                                            focus:outline-none
+                                            bg-blue-600 md:bg-transparent md:hover:border-blue-600 md:hover:text-blue-600
+                                            transition duration-300 ease-in-out
+                                            cursor-pointer
                                         "
                                     >
                                         <i class="fa-solid fa-info"></i>
                                     </a>
 
-                                    <button class="delete-preparation w-8 h-8 border border-gray-800 rounded-md focus:outline-none cursor-pointer hover:border-red-600 hover:text-red-600 transition duration-300 ease-in-out" data-id="{{ $preparation->id }}">
+                                    <button
+                                        class="
+                                            delete-preparation
+                                            w-8 h-8 border border-gray-800 rounded-md
+                                            focus:outline-none
+                                            bg-red-600 md:bg-transparent md:hover:border-red-600 md:hover:text-red-600
+                                            transition duration-300 ease-in-out
+                                            cursor-pointer
+                                        "
+                                        data-id="{{ $preparation->id }}"
+                                    >
                                         <i class="fa-regular fa-trash-can"></i>
                                     </button>
                                 </div>

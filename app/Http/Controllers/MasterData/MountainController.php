@@ -13,7 +13,8 @@ class MountainController extends Controller
      */
     public function index()
     {
-        $mountains = Mountain::latest()->get();
+        $mountains = Mountain::orderby('name', 'asc')
+                                ->get();
 
         return view('pages.mountain.index', [
             'title' => 'Mountains',

@@ -2,11 +2,14 @@
 
 @section('content')
     <div class="px-2">
-        @if (Auth::user()->id === 1)
-            <div class="flex items-center gap-2">
-                <a href="{{ route('mountain.create') }}" class="bg-emerald-600 hover:bg-emerald-700 px-2 py-1 rounded text-gray-100 transition duration-300 ease-in-out cursor-pointer">Add Mountain</a>
-            </div>
-        @endif
+        <div class="flex items-center justify-between">
+            <p class="uppercase font-bold text-2xl">Data {{ $title }}</p>
+            @if (Auth::user()->id === 1)
+                <div class="flex items-center gap-2">
+                    <a href="{{ route('mountain.create') }}" class="bg-emerald-600 hover:bg-emerald-700 px-2 py-1 rounded text-gray-100 transition duration-300 ease-in-out cursor-pointer">Add Mountain</a>
+                </div>
+            @endif
+        </div>
 
         <div
             x-data="
@@ -37,8 +40,7 @@
     <div class="overflow-x-auto px-2">
         <div class="flex items-center justify-between mb-2">
             <div class="flex items-center gap-2">
-                <span>Show Data</span>
-                <select id="customLength" class="bg-gray-800 border border-gray-600 text-gray-600 rounded px-2 py-1 focus:outline-none focus:border-emerald-600 focus:text-gray-300 transition duration-300 ease-in-out">
+                <select id="customLength" class="border border-gray-600 text-gray-300 rounded px-2 py-1 focus:outline-none focus:border-emerald-600 focus:text-gray-300 transition duration-300 ease-in-out">
                     <option value="10" selected>10</option>
                     <option value="25">25</option>
                     <option value="50">50</option>
@@ -50,7 +52,7 @@
                     type="text"
                     id="customSearch"
                     placeholder="Search mountain..."
-                    class="bg-gray-800 border border-gray-600 text-gray-300 rounded px-2 py-1 focus:border-emerald-600 focus:outline-none transition duration-300 ease-in-out"
+                    class="border border-gray-600 text-gray-300 rounded px-2 py-1 focus:border-emerald-600 focus:outline-none transition duration-300 ease-in-out"
                     autocomplete="true"
                 >
             </div>
@@ -62,7 +64,7 @@
                     <tr>
                         <th>#</th>
                         <th>Name</th>
-                        <th>Location</th>
+                        <th class="hidden lg:table-cell">Location</th>
                         <th>Elevation</th>
                         <th>Action</th>
                     </tr>
@@ -72,7 +74,7 @@
                         <tr data-id="{{ $mountain->id }}">
                             <td>{{ $loop->iteration }}</td>
                             <td>Mt. {{ $mountain->name }}</td>
-                            <td>{{ $mountain->location }}</td>
+                            <td class="hidden lg:table-cell">{{ $mountain->location }}</td>
                             <td>{{ number_format($mountain->elevation, 0, ',', '.') }} Mdpl</td>
                             <td>
                                 <div class="flex items-center gap-2">
@@ -82,17 +84,41 @@
 
                                     <button
                                         @click='showModal = true; selected = {!! $encodedMountain !!}'
-                                        class="w-8 h-8 border border-gray-800 rounded-md focus:outline-none cursor-pointer hover:border-cyan-600 hover:text-cyan-600 transition duration-300 ease-in-out"
+                                        class="
+                                            flex items-center justify-center w-8 h-8 border border-gray-800 rounded-md
+                                            focus:outline-none
+                                            bg-blue-600 md:bg-transparent md:hover:border-blue-600 md:hover:text-blue-600
+                                            transition duration-300 ease-in-out
+                                            cursor-pointer
+                                        "
                                     >
                                         <i class="fa-solid fa-info"></i>
                                     </button>
 
 
                                     @if(Auth::user()->id === 1)
-                                        <a href="{{ route('mountain.edit', $mountain->slug) }}" class="flex items-center justify-center w-8 h-8 border border-gray-800 rounded-md focus:outline-none cursor-pointer hover:border-yellow-600 hover:text-yellow-600 transition duration-300 ease-in-out">
+                                        <a
+                                            href="{{ route('mountain.edit', $mountain->slug) }}"
+                                            class="
+                                                flex items-center justify-center w-8 h-8 border border-gray-800 rounded-md
+                                                focus:outline-none
+                                                bg-yellow-600 md:bg-transparent md:hover:border-yellow-600 md:hover:text-yellow-600
+                                                transition duration-300 ease-in-out
+                                                cursor-pointer
+                                            ">
                                             <i class="fa-regular fa-pen-to-square"></i>
                                         </a>
-                                        <button class="delete-mountain w-8 h-8 border border-gray-800 rounded-md focus:outline-none cursor-pointer hover:border-red-600 hover:text-red-600 transition duration-300 ease-in-out" data-id="{{ $mountain->id }}">
+                                        <button
+                                            class="
+                                                delete-mountain
+                                                flex items-center justify-center w-8 h-8 border border-gray-800 rounded-md
+                                                focus:outline-none
+                                                bg-red-600 md:bg-transparent md:hover:border-red-600 md:hover:text-red-600
+                                                transition duration-300 ease-in-out
+                                                cursor-pointer
+                                            "
+                                            data-id="{{ $mountain->id }}"
+                                        >
                                             <i class="fa-regular fa-trash-can"></i>
                                         </button>
                                     @endif
@@ -158,7 +184,6 @@
 
         document.addEventListener("DOMContentLoaded", function () {
             mountainTables = $('#mountain-table').DataTable({
-                order: [[2, 'desc']], // default sort kolom Created At
                 columnDefs: [
                     { orderable: false, targets: 0 } // kolom nomor urut (#) tidak bisa di-sort
                 ],
