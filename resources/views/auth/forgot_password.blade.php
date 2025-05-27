@@ -1,7 +1,7 @@
 @extends('layouts.auth')
 
 @section('content')
-    <div class="bg-gray-800 p-6 rounded-lg w-full max-w-sm shadow-md">
+    <div class="border border-gray-700 p-6 rounded-lg w-full max-w-sm shadow-lg">
         <h1 class="text-2xl font-semibold mb-6 text-center text-white uppercase">{{ $title }}</h1>
 
         @if (session('success'))
@@ -30,7 +30,7 @@
                     type="email"
                     name="email"
                     id="email"
-                    class="w-full px-3 py-2 bg-gray-700 rounded text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition duration-300 ease-in-out"
+                    class="w-full px-3 py-2 border border-gray-700 rounded text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition duration-300 ease-in-out"
                     required
                     autofocus
                     placeholder="Enter Your Email"

@@ -57,4 +57,9 @@ class Preparation extends Model
     {
         return $this->hasMany(Logistic::class);
     }
+
+    public function transportations()
+    {
+        return $this->hasMany(Transportation::class);
+    }
 }

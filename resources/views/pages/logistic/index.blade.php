@@ -82,7 +82,7 @@
                 </span>
                 Equipment
             </a>
-            <a href="#" class="flex items-center gap-1 text-blue-600 font-medium hover:text-blue-800 transition duration-300 ease-in-out">
+            <a href="{{ route('preparation.transportation.index', $preparation->slug) }}" class="flex items-center gap-1 text-blue-600 font-medium hover:text-blue-800 transition duration-300 ease-in-out">
                 <span class="flex w-4 items-center justify-center">
                     <i class="fa-solid fa-car-side"></i>
                 </span>
@@ -292,8 +292,9 @@
                                     <td>{{ $logistic->name }}</td>
                                     <td>{{ $logistic->quantity }}</td>
                                     <td>
+                                        Rp
                                         <span class="text-gray-400 uppercase font-medium">
-                                            {{ $logistic->unit }}
+                                            {{ number_format($logistic->price, 0, ',', '.') }}
                                         </span>
                                     </td>
                                     <td>
@@ -314,124 +315,124 @@
 
                                 {{-- SHOW MODAL FOR DETAIL --}}
                                 <div id="modal-{{ $index }}" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
-                                        <div class="bg-gray-900 text-gray-300 p-6 rounded-xl w-11/12 max-w-md space-y-4 relative">
-                                            <div class="flex items-center justify-between">
-                                                <h3 class="text-lg font-semibold">{{ $logistic->name }}</h3>
-                                                <button type="button" class="text-red-500 cursor-pointer" onclick="document.getElementById('modal-{{ $index }}').classList.add('hidden')">✕</button>
-                                            </div>
-
-                                            <div>
-                                                <label for="quantity" class="block mb-1">Quantity <span class="text-red-500">*</span></label>
-                                                <input
-                                                    type="number"
-                                                    id="quantity"
-                                                    name="logistic[{{ $logistic->id }}][quantity]"
-                                                    class="
-                                                        border border-gray-700 rounded px-2 py-1 text-gray-300
-                                                        w-full
-                                                        focus:outline-none focus:border-emerald-600 focus:ring focus:ring-emerald-600
-                                                        transition duration-300 ease-in-out
-                                                    "
-                                                    value="{{ old('quantity') ?? $logistic->quantity }}"
-                                                    min="0"
-                                                >
-                                            </div>
-
-                                            @php
-                                                $units = ['pcs', 'pack', 'box', 'liter', 'ml', 'gram', 'kg'];
-                                            @endphp
-
-                                            <div>
-                                                <label for="unit" class="block text-gray-300 mb-1">Unit <span class="text-red-500">*</span></label>
-                                                <select
-                                                    id="unit"
-                                                    name="logistic[{{ $logistic->id }}][unit]"
-                                                    class="
-                                                        w-full px-3 py-2 border border-gray-700 rounded text-gray-300
-                                                        focus:outline-none focus:ring focus:ring-emerald-600 focus:border-emerald-600
-                                                        transition duration-300 ease-in-out
-                                                    "
-                                                    required
-                                                >
-                                                    @foreach($units as $unit)
-                                                        <option
-                                                            value="{{ $unit }}"
-                                                            {{ $logistic->unit == $unit ? 'selected' : '' }}
-                                                        >
-                                                            {{ ucfirst($unit) }}
-                                                            {{ $logistic->unit == $unit ? '(Default)' : '' }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-
-                                            <div>
-                                                <label for="price" class="block mb-1">Price <span class="text-red-500">*</span></label>
-                                                <input
-                                                    type="number"
-                                                    id="price"
-                                                    name="logistic[{{ $logistic->id }}][price]"
-                                                    class="
-                                                        border border-gray-700 rounded px-2 py-1 text-gray-300
-                                                        w-full
-                                                        focus:outline-none focus:border-emerald-600 focus:ring focus:ring-emerald-600
-                                                        transition duration-300 ease-in-out
-                                                    "
-                                                    value="{{ old('price') ?? $logistic->price }}"
-                                                    min="0"
-                                                >
-                                            </div>
-
-                                            <div>
-                                                <label for="description" class="block mb-1">Description Product</label>
-                                                <textarea
-                                                    id="description"
-                                                    name="logistic[{{ $logistic->id }}][description]"
-                                                    class="
-                                                        border border-gray-700 rounded px-2 py-1 text-gray-300
-                                                        w-full
-                                                        focus:outline-none focus:border-emerald-600 focus:ring focus:ring-emerald-600
-                                                        transition duration-300 ease-in-out
-                                                    "
-                                                    value="{{ old('description') ?? $logistic->description }}"
-                                                    placeholder="Description of Product..."
-                                                >{{ $logistic->description }}</textarea>
-                                            </div>
-
-                                            <div>
-                                                <label for="notes" class="block mb-1">Notes</label>
-                                                <textarea
-                                                    id="notes"
-                                                    name="logistic[{{ $logistic->id }}][notes]"
-                                                    class="
-                                                        border border-gray-700 rounded px-2 py-1 text-gray-300
-                                                        w-full
-                                                        focus:outline-none focus:border-emerald-600 focus:ring focus:ring-emerald-600
-                                                        transition duration-300 ease-in-out
-                                                    "
-                                                    value="{{ old('notes') ?? $logistic->notes }}"
-                                                    placeholder="Notes..."
-                                                >{{ $logistic->notes }}</textarea>
-                                            </div>
-
-                                            <div>
-                                                <label class="block mb-1">Group Item?</label>
-                                                <label class="inline-flex items-center space-x-2">
-                                                    <input type="hidden" name="logistic[{{ $logistic->id }}][is_group]" value="0">
-                                                    <input type="checkbox" class="hidden peer" name="logistic[{{ $logistic->id }}][is_group]"
-                                                        @if($logistic->is_group == 1) checked @endif>
-                                                    <span
-                                                        class="w-4 h-4 border border-gray-600 rounded-sm flex items-center justify-center
-                                                        peer-checked:bg-emerald-600 peer-checked:border-emerald-600
-                                                        transition duration-200 ease-in-out"
-                                                    >
-                                                        <svg class="hidden w-3 h-3 text-white peer-checked:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                                        </svg>
-                                                    </span>
-                                                </label>
-                                            </div>
+                                    <div class="bg-gray-900 text-gray-300 p-6 rounded-xl w-11/12 max-w-md space-y-4 relative">
+                                        <div class="flex items-center justify-between">
+                                            <h3 class="text-lg font-semibold">{{ $logistic->name }}</h3>
+                                            <button type="button" class="text-red-500 cursor-pointer" onclick="document.getElementById('modal-{{ $index }}').classList.add('hidden')">✕</button>
                                         </div>
+
+                                        <div>
+                                            <label for="quantity" class="block mb-1">Quantity <span class="text-red-500">*</span></label>
+                                            <input
+                                                type="number"
+                                                id="quantity"
+                                                name="logistic[{{ $logistic->id }}][quantity]"
+                                                class="
+                                                    border border-gray-700 rounded px-2 py-1 text-gray-300
+                                                    w-full
+                                                    focus:outline-none focus:border-emerald-600 focus:ring focus:ring-emerald-600
+                                                    transition duration-300 ease-in-out
+                                                "
+                                                value="{{ old('quantity') ?? $logistic->quantity }}"
+                                                min="0"
+                                            >
+                                        </div>
+
+                                        @php
+                                            $units = ['pcs', 'pack', 'box', 'liter', 'ml', 'gram', 'kg'];
+                                        @endphp
+
+                                        <div>
+                                            <label for="unit" class="block text-gray-300 mb-1">Unit <span class="text-red-500">*</span></label>
+                                            <select
+                                                id="unit"
+                                                name="logistic[{{ $logistic->id }}][unit]"
+                                                class="
+                                                    w-full px-3 py-2 border border-gray-700 rounded text-gray-300
+                                                    focus:outline-none focus:ring focus:ring-emerald-600 focus:border-emerald-600
+                                                    transition duration-300 ease-in-out
+                                                "
+                                                required
+                                            >
+                                                @foreach($units as $unit)
+                                                    <option
+                                                        value="{{ $unit }}"
+                                                        {{ $logistic->unit == $unit ? 'selected' : '' }}
+                                                    >
+                                                        {{ ucfirst($unit) }}
+                                                        {{ $logistic->unit == $unit ? '(Default)' : '' }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label for="price" class="block mb-1">Price <span class="text-red-500">*</span></label>
+                                            <input
+                                                type="number"
+                                                id="price"
+                                                name="logistic[{{ $logistic->id }}][price]"
+                                                class="
+                                                    border border-gray-700 rounded px-2 py-1 text-gray-300
+                                                    w-full
+                                                    focus:outline-none focus:border-emerald-600 focus:ring focus:ring-emerald-600
+                                                    transition duration-300 ease-in-out
+                                                "
+                                                value="{{ old('price') ?? $logistic->price }}"
+                                                min="0"
+                                            >
+                                        </div>
+
+                                        <div>
+                                            <label for="description" class="block mb-1">Description Product</label>
+                                            <textarea
+                                                id="description"
+                                                name="logistic[{{ $logistic->id }}][description]"
+                                                class="
+                                                    border border-gray-700 rounded px-2 py-1 text-gray-300
+                                                    w-full
+                                                    focus:outline-none focus:border-emerald-600 focus:ring focus:ring-emerald-600
+                                                    transition duration-300 ease-in-out
+                                                "
+                                                value="{{ old('description') ?? $logistic->description }}"
+                                                placeholder="Description of Product..."
+                                            >{{ $logistic->description }}</textarea>
+                                        </div>
+
+                                        <div>
+                                            <label for="notes" class="block mb-1">Notes</label>
+                                            <textarea
+                                                id="notes"
+                                                name="logistic[{{ $logistic->id }}][notes]"
+                                                class="
+                                                    border border-gray-700 rounded px-2 py-1 text-gray-300
+                                                    w-full
+                                                    focus:outline-none focus:border-emerald-600 focus:ring focus:ring-emerald-600
+                                                    transition duration-300 ease-in-out
+                                                "
+                                                value="{{ old('notes') ?? $logistic->notes }}"
+                                                placeholder="Notes..."
+                                            >{{ $logistic->notes }}</textarea>
+                                        </div>
+
+                                        <div>
+                                            <label class="block mb-1">Group Item?</label>
+                                            <label class="inline-flex items-center space-x-2">
+                                                <input type="hidden" name="logistic[{{ $logistic->id }}][is_group]" value="0">
+                                                <input type="checkbox" class="hidden peer" name="logistic[{{ $logistic->id }}][is_group]"
+                                                    @if($logistic->is_group == 1) checked @endif>
+                                                <span
+                                                    class="w-4 h-4 border border-gray-600 rounded-sm flex items-center justify-center
+                                                    peer-checked:bg-emerald-600 peer-checked:border-emerald-600
+                                                    transition duration-200 ease-in-out"
+                                                >
+                                                    <svg class="hidden w-3 h-3 text-white peer-checked:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                                    </svg>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             @endforeach
                         </tbody>

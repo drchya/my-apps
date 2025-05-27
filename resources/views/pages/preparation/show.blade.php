@@ -82,7 +82,7 @@
                 </span>
                 Logistic
             </a>
-            <a href="#" class="flex items-center gap-1 text-blue-600 font-medium hover:text-blue-800 transition duration-300 ease-in-out">
+            <a href="{{ route('preparation.transportation.index', $preparation->slug) }}" class="flex items-center gap-1 text-blue-600 font-medium hover:text-blue-800 transition duration-300 ease-in-out">
                 <span class="flex w-4 items-center justify-center">
                     <i class="fa-solid fa-car-side"></i>
                 </span>

@@ -7,10 +7,12 @@ use App\Http\Controllers\MasterData\LogisticsController;
 use App\Http\Controllers\MasterData\MountainController;
 use App\Http\Controllers\MasterData\PreparationController;
 use App\Http\Controllers\MasterData\PreparationItemsController;
+use App\Http\Controllers\MasterData\TransportationController;
 use App\Http\Controllers\MasterData\UserController;
 use App\Http\Controllers\TrashBinController;
 use App\Http\Middleware\OnlyAdmin;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -49,6 +51,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/items/store', [PreparationItemsController::class, 'store'])->name('items.store');
         Route::put('/items/update/{preparation}', [PreparationItemsController::class, 'update'])->name('items.update');
         Route::resource('{preparation}/logistics', LogisticsController::class)->names('logistics');
+        Route::get('{preparation}/transportation', [TransportationController::class, 'index'])->name('transportation.index');
+        Route::post('{preparation}/transportation', [TransportationController::class, 'store'])->name('transportation.store');
+        Route::put('{preparation}/transportation/{transportation}', [TransportationController::class, 'update'])->name('transportation.update');
     });
 });
 

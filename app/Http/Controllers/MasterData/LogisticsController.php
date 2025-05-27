@@ -98,7 +98,7 @@ class LogisticsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Preparation $preparation, Logistic $logistic)
+    public function update(Request $request, Preparation $preparation)
     {
         $items = $request->input('logistic', []);
         $action = $request->input('action');
