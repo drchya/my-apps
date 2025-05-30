@@ -1,9 +1,9 @@
 <!-- Topbar -->
-<header class="bg-gray-800 border-b border-gray-700 px-4 py-3 flex justify-between items-center">
-    <button @click="sidebarOpen = true" class="xl:hidden text-gray-300 hover:text-white cursor-pointer">
+<header class="bg-gray-800 border-b border-gray-700 px-6 py-4 flex items-center justify-between">
+    <button @click="sidebarOpen = true" class="xl:hidden text-gray-300 hover:text-white cursor-pointer my-0.5">
         <i class="fa-solid fa-bars"></i>
     </button>
-    <h2 class="font-semibold text-white text-base uppercase">{{ Auth::user()->username ?? "You don't have username" }}</h2>
+    <h2 class="font-semibold text-white text-base uppercase my-0.5">{{ Auth::user()->username ?? "You don't have username" }}</h2>
     @if (session('success'))
         <div
             x-data="{ show: true }"
@@ -20,7 +20,7 @@
             <p>{{ session('success') }}</p>
         </div>
     @endif
-    <div x-data="{ open: false }" class="relative">
+    <div x-data="{ open: false }" class="relative my-0.5">
         <button
             @click="open = !open"
             class="flex items-center text-gray-300 hover:text-white focus:outline-none text-sm cursor-pointer"
@@ -35,7 +35,9 @@
             class="absolute right-0 mt-2 w-40 bg-gray-700 rounded-md shadow-lg z-50 py-1"
         >
             <a href="{{ route('users.profile', Auth::user()->slug) }}" class="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-600">Profile</a>
-            <a href="#" class="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-600">Settings</a>
+            <?php if (Auth::user()->id === 1) : ?>
+                <a href="#" class="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-600">Settings</a>
+            <?php endif; ?>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-gray-600 cursor-pointer">Logout</button>

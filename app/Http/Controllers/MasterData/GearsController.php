@@ -22,7 +22,7 @@ class GearsController extends Controller
                 ->get();
 
         return view('pages.gear.index', [
-            'title' => "Your Gear",
+            'title' => "Gears",
             'gears' => $gears
         ]);
     }

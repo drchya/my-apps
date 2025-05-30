@@ -1,40 +1,38 @@
 @extends('layouts.main')
 
 @section('content')
-    <div class="px-2">
-        <div class="flex items-center justify-between">
-            <p class="uppercase font-bold text-2xl">Data {{ $title }}</p>
+    <div class="flex items-center justify-between">
+        <p class="uppercase font-bold text-2xl">Data {{ $title }}</p>
 
-            <a href="{{ route('gear.create') }}" class="bg-emerald-600 hover:bg-emerald-700 px-2 py-1 rounded text-gray-100 transition duration-300 ease-in-out cursor-pointer">Add Your Gear</a>
-        </div>
+        <a href="{{ route('gear.create') }}" class="bg-emerald-600 hover:bg-emerald-700 px-2 py-1 rounded text-gray-100 transition duration-300 ease-in-out cursor-pointer">Add Your Gear</a>
+    </div>
 
+    <div
+        x-data="
+            { message: '{{ session('message') }}',
+                deleted: '{{ session('delete') }}' }
+        "
+        x-init="
+            setTimeout(() => message = '', 3000);
+            setTimeout(() => deleted = '', 3000);
+        "
+    >
         <div
-            x-data="
-                { message: '{{ session('message') }}',
-                 deleted: '{{ session('delete') }}' }
-            "
-            x-init="
-                setTimeout(() => message = '', 3000);
-                setTimeout(() => deleted = '', 3000);
-            "
-        >
-            <div
-                x-show="message"
-                x-text="message"
-                x-transition:enter="transition ease-out duration-300"
-                x-transition:enter-start="opacity-0 translate-y-2"
-                x-transition:enter-end="opacity-100 translate-y-0"
-                x-transition:leave="transition ease-in duration-300"
-                x-transition:leave-start="opacity-100 translate-y-0"
-                x-transition:leave-end="opacity-0 translate-y-2"
-                class="my-2 text-gray-300 text-center md:text-start font-medium bg-emerald-500/70 py-2 md:px-2 rounded-lg"
-            ></div>
-        </div>
+            x-show="message"
+            x-text="message"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 translate-y-2"
+            x-transition:enter-end="opacity-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-300"
+            x-transition:leave-start="opacity-100 translate-y-0"
+            x-transition:leave-end="opacity-0 translate-y-2"
+            class="my-2 text-gray-300 text-center md:text-start font-medium bg-emerald-500/70 py-2 md:px-2 rounded-lg"
+        ></div>
     </div>
 
     <hr class="text-gray-800 my-4">
 
-    <div class="overflow-x-auto px-2">
+    <div class="overflow-x-auto">
         <div class="flex items-center justify-between mb-2">
             <div class="flex items-center gap-2">
                 <select id="customLength" class="border border-gray-600 text-gray-300 rounded px-2 py-1 focus:outline-none focus:border-emerald-600 focus:text-gray-300 transition duration-300 ease-in-out">
@@ -150,7 +148,7 @@
                 <div
                     x-show="showModal"
                     x-cloak
-                    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+                    class="fixed inset-0 bg-black/10 backdrop-blur-lg flex items-center justify-center z-50"
                     x-transition:enter="transition ease-out duration-300"
                     x-transition:enter-start="opacity-0"
                     x-transition:enter-end="opacity-100"
@@ -168,14 +166,18 @@
                         x-transition:leave-start="scale-100 opacity-100"
                         x-transition:leave-end="scale-90 opacity-0"
                     >
-                        <button
-                            @click="showModal = false"
-                            class="absolute top-2 right-2 text-gray-400 hover:text-white text-lg cursor-pointer"
-                        >
-                            &times;
-                        </button>
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-xl font-semibold">Gears Details</h2>
 
-                        <h2 class="text-xl font-semibold mb-4">Gears Details</h2>
+                            <button
+                                @click="showModal = false"
+                                class="text-red-600 hover:text-red-700 text-lg cursor-pointer transition duration-300 ease-in-out"
+                            >
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+
+                        <hr class="text-gray-800 my-4">
 
                         <template x-if="selected">
                             <div class="space-y-3">

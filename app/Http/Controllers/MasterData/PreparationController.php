@@ -36,7 +36,7 @@ class PreparationController extends Controller
         }
 
         return view('pages.preparation.index', [
-            'title' => "Preparation For Your Journey",
+            'title' => "Preparations",
             'preparations' => $preparations
         ]);
     }

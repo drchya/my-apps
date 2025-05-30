@@ -1,100 +1,96 @@
 @extends('layouts.main')
 
 @section('content')
-    <div class="px-2">
+    <div
+        x-data="{
+                    message: '{{ session('message') }}',
+                    error: '{{ session('error') }}'
+                }
+        "
+        x-init="
+            setTimeout(() => message = '', 3000);
+            setTimeout(() => deleted = '', 3000);
+            setTimeout(() => error = '', 3000);
+        "
+    >
         <div
-            x-data="{
-                        message: '{{ session('message') }}',
-                        error: '{{ session('error') }}'
-                    }
-            "
-            x-init="
-                setTimeout(() => message = '', 3000);
-                setTimeout(() => deleted = '', 3000);
-                setTimeout(() => error = '', 3000);
-            "
-        >
-            <div
-                x-show="message"
-                x-text="message"
-                x-transition:enter="transition ease-out duration-300"
-                x-transition:enter-start="opacity-0 translate-y-2"
-                x-transition:enter-end="opacity-100 translate-y-0"
-                x-transition:leave="transition ease-in duration-300"
-                x-transition:leave-start="opacity-100 translate-y-0"
-                x-transition:leave-end="opacity-0 translate-y-2"
-                class="my-2 text-gray-300 text-center md:text-start font-medium bg-emerald-500/70 py-2 md:px-2 rounded-lg"
-            ></div>
-            <div
-                x-show="error"
-                x-text="error"
-                x-transition:enter="transition ease-out duration-300"
-                x-transition:enter-start="opacity-0 translate-y-2"
-                x-transition:enter-end="opacity-100 translate-y-0"
-                x-transition:leave="transition ease-in duration-300"
-                x-transition:leave-start="opacity-100 translate-y-0"
-                x-transition:leave-end="opacity-0 translate-y-2"
-                class="my-2 text-gray-300 text-center md:text-start font-medium bg-red-500/70 py-2 md:px-2 rounded-lg"
-            ></div>
-        </div>
+            x-show="message"
+            x-text="message"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 translate-y-2"
+            x-transition:enter-end="opacity-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-300"
+            x-transition:leave-start="opacity-100 translate-y-0"
+            x-transition:leave-end="opacity-0 translate-y-2"
+            class="my-2 text-gray-300 text-center md:text-start font-medium bg-emerald-500/70 py-2 md:px-2 rounded-lg"
+        ></div>
+        <div
+            x-show="error"
+            x-text="error"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 translate-y-2"
+            x-transition:enter-end="opacity-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-300"
+            x-transition:leave-start="opacity-100 translate-y-0"
+            x-transition:leave-end="opacity-0 translate-y-2"
+            class="my-2 text-gray-300 text-center md:text-start font-medium bg-red-500/70 py-2 md:px-2 rounded-lg"
+        ></div>
     </div>
 
-    <div class="px-2">
-        <h1 class="text-gray-50 text-xl md:text-2xl uppercase font-extrabold">Mt. {{ $preparation->mountain->name }}</h1>
+    <h1 class="text-gray-50 text-xl md:text-2xl uppercase font-extrabold">Mt. {{ $preparation->mountain->name }}</h1>
 
-        <p class="flex items-center gap-2 text-gray-400 font-medium mb-1">
+    <p class="flex items-center gap-2 text-gray-400 font-medium mb-1">
+        <span class="flex w-4 items-center justify-center">
+            <i class="fa-solid fa-mountain text-yellow-900"></i>
+        </span>
+        {{ number_format($preparation->mountain->elevation, 0, ',', '.') }} Mdpl
+    </p>
+
+    <p class="flex items-center gap-2 text-gray-400 font-medium mb-1">
+        <span class="flex w-4 items-center justify-center">
+            <i class="fa-solid fa-map-pin text-red-600"></i>
+        </span>
+        {{ $preparation->mountain->location }}
+    </p>
+    @php
+        use Carbon\Carbon;
+
+        $departure = Carbon::parse($preparation->departure_date)->translatedFormat('d F');
+        $return = Carbon::parse($preparation->return_date)->translatedFormat('d F Y');
+    @endphp
+    <p class="flex items-center gap-2 text-gray-400 font-medium mb-1">
+        <span class="flex w-4 items-center justify-center">
+            <i class="fa-regular fa-calendar text-red-400"></i>
+        </span>
+        {{ $departure }} - {{ $return }} ({{ $preparation->total_days }} Days)
+    </p>
+
+    <p class="flex items-center gap-2 text-gray-400 font-medium">
+        <span class="flex w-4 items-center justify-center">
+            <i class="fa-solid fa-dollar-sign text-green-600"></i>
+        </span>
+        Total Budget: Rp{{ number_format($preparation->budget_estimate, 0, ',', '.') }}
+    </p>
+
+    <div class="flex items-center my-2 gap-2">
+        <a href="{{ route('preparation.logistics.index', $preparation->slug) }}" class="flex items-center gap-1 text-yellow-600 font-medium hover:text-yellow-800 transition duration-300 ease-in-out">
             <span class="flex w-4 items-center justify-center">
-                <i class="fa-solid fa-mountain text-yellow-900"></i>
+                <i class="fa-solid fa-box"></i>
             </span>
-            {{ number_format($preparation->mountain->elevation, 0, ',', '.') }} Mdpl
-        </p>
-
-        <p class="flex items-center gap-2 text-gray-400 font-medium mb-1">
+            Logistic
+        </a>
+        <a href="{{ route('preparation.transportation.index', $preparation->slug) }}" class="flex items-center gap-1 text-blue-600 font-medium hover:text-blue-800 transition duration-300 ease-in-out">
             <span class="flex w-4 items-center justify-center">
-                <i class="fa-solid fa-map-pin text-red-600"></i>
+                <i class="fa-solid fa-car-side"></i>
             </span>
-            {{ $preparation->mountain->location }}
-        </p>
-        @php
-            use Carbon\Carbon;
-
-            $departure = Carbon::parse($preparation->departure_date)->translatedFormat('d F');
-            $return = Carbon::parse($preparation->return_date)->translatedFormat('d F Y');
-        @endphp
-        <p class="flex items-center gap-2 text-gray-400 font-medium mb-1">
-            <span class="flex w-4 items-center justify-center">
-                <i class="fa-regular fa-calendar text-red-400"></i>
-            </span>
-            {{ $departure }} - {{ $return }} ({{ $preparation->total_days }} Days)
-        </p>
-
-        <p class="flex items-center gap-2 text-gray-400 font-medium">
-            <span class="flex w-4 items-center justify-center">
-                <i class="fa-solid fa-dollar-sign text-green-600"></i>
-            </span>
-            Total Budget: Rp{{ number_format($preparation->budget_estimate, 0, ',', '.') }}
-        </p>
-
-        <div class="flex items-center my-2 gap-2">
-            <a href="{{ route('preparation.logistics.index', $preparation->slug) }}" class="flex items-center gap-1 text-yellow-600 font-medium hover:text-yellow-800 transition duration-300 ease-in-out">
-                <span class="flex w-4 items-center justify-center">
-                    <i class="fa-solid fa-box"></i>
-                </span>
-                Logistic
-            </a>
-            <a href="{{ route('preparation.transportation.index', $preparation->slug) }}" class="flex items-center gap-1 text-blue-600 font-medium hover:text-blue-800 transition duration-300 ease-in-out">
-                <span class="flex w-4 items-center justify-center">
-                    <i class="fa-solid fa-car-side"></i>
-                </span>
-                Transportation
-            </a>
-        </div>
-        <a href="{{ route('preparation.index') }}" class="mt-1 w-full text-emerald-600 font-medium hover:text-emerald-800 transition duration-300 ease-in-out">Back to Table</a>
+            Transportation
+        </a>
     </div>
+    <a href="{{ route('preparation.index') }}" class="mt-1 w-full text-emerald-600 font-medium hover:text-emerald-800 transition duration-300 ease-in-out">Back to Table</a>
 
     <hr class="text-gray-800 my-4">
 
-    <div class="overflow-x-auto px-2">
+    <div class="overflow-x-auto">
         <div class="flex items-center justify-between mb-2">
             @if (!$preparation_items->isEmpty())
                 <span
@@ -112,7 +108,7 @@
             @endif
 
             <!-- Modal -->
-            <div id="addGearModal" class="hidden fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
+            <div id="addGearModal" class="hidden fixed inset-0 z-50 bg-black/10 backdrop-blur-lg flex justify-center items-center">
                 <div class="bg-gray-900 p-6 rounded-xl w-full max-w-lg mx-16 shadow-xl">
                     <div class="flex items-center justify-between">
                         <h2 class="text-xl font-bold text-white">Add Gear</h2>
@@ -369,7 +365,7 @@
                                 </tr>
 
                                 {{-- MODAL --}}
-                                <div id="modal-{{ $index }}" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+                                <div id="modal-{{ $index }}" class="fixed inset-0 bg-black/10 backdrop-blur-lg z-50 hidden flex items-center justify-center">
                                     <div class="bg-gray-900 text-gray-300 p-6 rounded-xl w-11/12 max-w-md space-y-4 relative">
                                         <div class="flex items-center justify-between">
                                             <h3 class="text-lg font-semibold">{{ $item->type->name }} Details</h3>

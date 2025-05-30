@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('content')
-    <div x-data="formHandler()" x-ref="formWrapper" class="px-2">
+    <div x-data="formHandler()" x-ref="formWrapper">
         <div class="flex items-center gap-2">
             <button @click="showForm = !showForm" class="bg-emerald-600 hover:bg-emerald-700 px-2 py-1 rounded text-gray-100 transition duration-300 ease-in-out cursor-pointer">Create User</button>
 
@@ -55,7 +55,7 @@
 
     <hr class="text-gray-800 my-4">
 
-    <div class="overflow-x-auto px-2">
+    <div class="overflow-x-auto">
         <div class="flex items-center justify-between mb-2">
             <div>
                 <select id="customLength" class="bg-gray-800 border border-gray-600 text-white rounded px-2 py-1 focus:outline-none">

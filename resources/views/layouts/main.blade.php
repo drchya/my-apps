@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-<body class="h-full text-xs md:text-sm text-white">
+<body class="h-full text-xs md:text-sm text-white" x-data="{ sidebarOpen: false, sidebarCollapsed: false }">
     <div class="flex">
         <div class="flex min-h-screen overflow-hidden">
             @include('component.sidebar')
@@ -23,13 +23,14 @@
 
             <!-- Page Content -->
             <main class="m-6 overflow-y-auto bg-gray-900 flex-1">
+                @include('component.breadcrumb')
+
                 @yield('content')
             </main>
         </div>
     </div>
 
     @stack('scripts')
-    <script src="https://unpkg.com/alpinejs" defer></script>
     @livewireScripts
 </body>
 </html>

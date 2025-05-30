@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('content')
-<div class="mx-auto mt-4 px-4">
+<div class="mx-auto mt-4">
     <div x-data="{ message: '{{ session('message') }}' }" x-init="setTimeout(() => message = '', 3000)">
         <div
             x-show="message"
@@ -16,7 +16,7 @@
         ></div>
     </div>
 
-    <div class="bg-gray-900 border border-gray-800 rounded-2xl shadow p-6">
+    <div class="bg-gray-900 border border-gray-800 rounded shadow p-6">
         <div class="flex flex-col md:flex-row items-center text-center md:text-start gap-4 mb-6">
             <div class="bg-emerald-600 text-white rounded-full w-12 h-12 flex items-center justify-center text-xl font-bold uppercase">
                 {{ strtoupper(substr($user->email, 0, 1)) }}

@@ -7,14 +7,12 @@ use App\Http\Controllers\MasterData\LogisticsController;
 use App\Http\Controllers\MasterData\MountainController;
 use App\Http\Controllers\MasterData\PreparationController;
 use App\Http\Controllers\MasterData\PreparationItemsController;
+use App\Http\Controllers\MasterData\SettingController;
 use App\Http\Controllers\MasterData\TransportationController;
 use App\Http\Controllers\MasterData\UserController;
 use App\Http\Controllers\TrashBinController;
 use App\Http\Middleware\OnlyAdmin;
 use Illuminate\Support\Facades\Route;
-
-
-
 
 
 Route::get('/', function () {
@@ -31,6 +29,12 @@ Route::middleware('auth')->group(function () {
         Route::get('recycle', [TrashBinController::class, 'recycle'])->name('users.recycle');
         Route::delete('users/${id}/force', [TrashBinController::class, 'forceDelete'])->name('users.force.delete');
         Route::patch('users/{id}/restore', [TrashBinController::class, 'restore'])->name('users.restore');
+    });
+
+    Route::middleware(['auth', OnlyAdmin::class])->prefix('setting')->name('setting.')->group(function () {
+        Route::get('type', [SettingController::class, 'index_type'])->name('type.index');
+        Route::get('categories', [SettingController::class, 'index_category'])->name('category.index');
+        Route::get('statuses', [SettingController::class, 'index_statuses'])->name('status.index');
     });
 
     Route::patch('users/{user}', [UserController::class, 'update'])->name('users.update');
