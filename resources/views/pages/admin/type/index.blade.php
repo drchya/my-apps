@@ -1,9 +1,8 @@
 @extends('layouts.main')
 
 @section('content')
-
     <div class="flex items-center">
-        <a href="#" class="bg-emerald-600 hover:bg-emerald-700 px-2 py-1 rounded text-gray-100 transition duration-300 ease-in-out cursor-pointer">Add Type Item</a>
+        <a href="{{ route('setting.type.create') }}" class="bg-emerald-600 hover:bg-emerald-700 px-2 py-1 rounded text-gray-100 transition duration-300 ease-in-out cursor-pointer">Add Type Item</a>
     </div>
 
     <div
@@ -70,6 +69,7 @@
                         <td>
                             <div class="flex items-center gap-2">
                                 <a
+                                    href="{{ route('setting.type.edit', $item->slug) }}"
                                     class="
                                         flex items-center justify-center w-8 h-8 border border-gray-800 rounded-md
                                         focus:outline-none

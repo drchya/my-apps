@@ -33,8 +33,17 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware(['auth', OnlyAdmin::class])->prefix('setting')->name('setting.')->group(function () {
         Route::get('type', [SettingController::class, 'index_type'])->name('type.index');
+        Route::get('type/create', [SettingController::class, 'create_type'])->name('type.create');
+        Route::get('type/{slug}/edit', [SettingController::class, 'edit_type'])->name('type.edit');
+        Route::put('type/{slug}', [SettingController::class, 'update_type'])->name('type.update');
+
         Route::get('categories', [SettingController::class, 'index_category'])->name('category.index');
+        Route::get('categories/create', [SettingController::class, 'create_category'])->name('category.create');
+        Route::get('categories/{slug}/edit', [SettingController::class, 'edit_category'])->name('category.edit');
+
         Route::get('statuses', [SettingController::class, 'index_statuses'])->name('status.index');
+        Route::get('statuses/create', [SettingController::class, 'create_statuses'])->name('status.create');
+        Route::get('statuses/{slug}/edit', [SettingController::class, 'edit_statuses'])->name('status.edit');
     });
 
     Route::patch('users/{user}', [UserController::class, 'update'])->name('users.update');

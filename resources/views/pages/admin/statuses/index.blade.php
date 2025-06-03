@@ -1,9 +1,8 @@
 @extends('layouts.main')
 
 @section('content')
-
     <div class="flex items-center">
-        <a href="#" class="bg-emerald-600 hover:bg-emerald-700 px-2 py-1 rounded text-gray-100 transition duration-300 ease-in-out cursor-pointer">Add Statuses</a>
+        <a href="{{ route('setting.status.create') }}" class="bg-emerald-600 hover:bg-emerald-700 px-2 py-1 rounded text-gray-100 transition duration-300 ease-in-out cursor-pointer">Add Statuses</a>
     </div>
 
     <div
@@ -47,7 +46,7 @@
                 <input
                     type="text"
                     id="customSearch"
-                    placeholder="Search Type..."
+                    placeholder="Search Status..."
                     class="border border-gray-600 text-gray-300 rounded px-2 py-1 focus:border-emerald-600 focus:outline-none transition duration-300 ease-in-out"
                 >
             </div>
@@ -70,6 +69,7 @@
                         <td>
                             <div class="flex items-center gap-2">
                                 <a
+                                    href="{{ route('setting.status.edit', $item->slug) }}"
                                     class="
                                         flex items-center justify-center w-8 h-8 border border-gray-800 rounded-md
                                         focus:outline-none

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class TypeSeeder extends Seeder
 {
@@ -61,6 +62,7 @@ class TypeSeeder extends Seeder
 
         foreach ($types as $type) {
             DB::table('types')->insert([
+                'slug' => Str::slug($type['name']),
                 'name' => $type['name'],
                 'category_id' => $type['category_id'],
                 'created_at' => now(),

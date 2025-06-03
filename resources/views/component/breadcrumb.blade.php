@@ -53,7 +53,7 @@
                     @if ($loop->last)
                         <span class="text-emerald-600 cursor-default">{{ $shortLabel }}</span>
                     @else
-                        <a href="{{ url($url) }}" class="hover:text-blue-400 transition duration-150 ease-in-out">
+                        <a href="{{ url($url) }}" class="text-gray-300 hover:text-emerald-600 transition duration-150 ease-in-out">
                             {{ $shortLabel }}
                         </a>
                     @endif

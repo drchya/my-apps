@@ -138,7 +138,8 @@
 
     foreach ($settingSubMenus as $submenu) {
         if (! $submenu['adminOnly'] || Auth::user()->id === 1) {
-            if (request()->routeIs($submenu['route'])) {
+            $pattern = str_replace('.index', '.*', $submenu['route']);
+            if (request()->routeIs($pattern)) {
                 $isSettingActive = true;
                 break;
             }
@@ -175,7 +176,8 @@
                     @foreach ($settingSubMenus as $submenu)
                         @if (! $submenu['adminOnly'] || Auth::user()->id === 1)
                             @php
-                                $isActive = request()->routeIs($submenu['route']);
+                                $pattern = str_replace('.index', '.*', $submenu['route']);
+                                $isActive = request()->routeIs($pattern);
                             @endphp
 
                             <li>
