@@ -111,7 +111,9 @@ class SettingController extends Controller
 
     public function index_category()
     {
-        $category = Category::all();
+        $category = Category::select('*')
+                            ->orderBy('name')
+                            ->get();
         return view('pages/admin/categories/index', [
             'title' => 'Data Category Item',
             'categories' => $category
@@ -123,6 +125,27 @@ class SettingController extends Controller
             'title' => 'Form Input Category'
         ]);
     }
+    public function store_category(Request $request)
+    {
+        $exists = Category::where('name', $request->name)->exists();
+        if ($exists) {
+            return redirect()->back()->with('delete', "The Category already exists in the Table.");
+        }
+
+        $validated = $request->validate([
+            'name' => 'required|string'
+        ]);
+
+        $slug = Str::slug($request->name);
+        $name = ucwords(strtolower($validated['name']));
+
+        Category::create([
+            'slug' => $slug,
+            'name' => $name
+        ]);
+
+        return redirect()->route('setting.category.index')->with('message', 'Category created successfully!');
+    }
     public function edit_category($slug)
     {
         $category = Category::where('slug', $slug)->firstOrFail();
@@ -132,10 +155,59 @@ class SettingController extends Controller
             'category' => $category
         ]);
     }
+    public function update_category(Request $request, $slug)
+    {
+        $category = Category::where('slug', $slug)->firstOrFail();
+
+        $exists = Category::where('name', $request->name)->exists();
+        if ($exists) {
+            return redirect()->back()->with('warning', "The Category already exists in the Table.");
+        }
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255'
+        ]);
+
+        $new_slug = Str::slug($validated['name']);
+        $checkChanges = $validated['name'] === $category->name;
+        if ($checkChanges) {
+            return redirect()->back()->with('warning', "There is nothing to change!");
+        }
+
+        if ($validated['name'] !== $category->name) {
+            $request->validate([
+                'name' => 'unique:categories,name'
+            ]);
+        }
+
+        $name = ucwords(strtolower($validated['name']));
+
+        $category->update([
+            'slug' => $new_slug,
+            'name' => $name,
+        ]);
+
+        return redirect()->route('setting.category.index')->with('message', "Data has been updated!");
+    }
+    public function destroy_category($slug)
+    {
+        $category = Category::where('slug', $slug)->firstOrFail();
+        $usedInType = $category->types()->exists();
+
+        if ($usedInType) {
+            return redirect()->back()->with('warning', "Cannot delete this Category because it is used in another table.");
+        }
+
+        $category->delete();
+
+        return redirect()->route('setting.category.index')->with('message', "Category has been deleted!");
+    }
 
     public function index_statuses()
     {
-        $status = Status::all();
+        $status = Status::select('*')
+                    ->orderBy('name')
+                    ->get();
         return view('pages/admin/statuses/index', [
             'title' => 'Data Status Item',
             'statuses' => $status
@@ -147,6 +219,26 @@ class SettingController extends Controller
             'title' => 'Form Input Status'
         ]);
     }
+    public function store_statuses(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255'
+        ]);
+
+        $slug = Str::slug($request->name);
+        $name = ucwords(strtolower($validated['name']));
+        $exists = Status::where('name', $name)->exists();
+        if ($exists) {
+            return redirect()->back()->with('delete', "The Status already exists in the Table.");
+        }
+
+        Status::create([
+            'name' => $name,
+            'slug' => $slug
+        ]);
+
+        return redirect()->route('setting.status.index')->with('message', "Status created successfully!");
+    }
     public function edit_statuses($slug)
     {
         $status = Status::where('slug', $slug)->firstOrFail();
@@ -154,5 +246,52 @@ class SettingController extends Controller
             'title' => 'Form Edit Status',
             'status' => $status
         ]);
+    }
+    public function update_statuses(Request $request, $slug)
+    {
+        $status = Status::where('slug', $slug)->firstOrFail();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255'
+        ]);
+
+        $new_slug = Str::slug($validated['name']);
+        $checkChanges = $validated['name'] === $status->name;
+        if ($checkChanges) {
+            return redirect()->back()->with('warning', "There is nothing to change!");
+        }
+
+        if ($validated['name'] !== $status->name) {
+            $request->validate([
+                'name' => 'unique:statuses,name'
+            ]);
+        }
+
+        $name = ucwords(strtolower($validated['name']));
+
+        $exists = Status::where('name', $name)->exists();
+        if ($exists) {
+            return redirect()->back()->with('warning', "The Status already exists in the Table.");
+        }
+
+        $status->update([
+            'name' => $name,
+            'slug' => $new_slug,
+        ]);
+
+        return redirect()->route('setting.status.index')->with('message', "Data has been updated!");
+    }
+    public function destroy_statuses($slug)
+    {
+        $status = Status::where('slug', $slug)->firstOrFail();
+        $usedInGears = $status->gears()->exists();
+
+        if ($usedInGears) {
+            return redirect()->back()->with('warning', "Cannot delete this Status because it is used in another table.");
+        }
+
+        $status->delete();
+
+        return redirect()->route('setting.status.index')->with('message', "Status has been deleted!");
     }
 }

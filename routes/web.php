@@ -41,11 +41,17 @@ Route::middleware('auth')->group(function () {
 
         Route::get('categories', [SettingController::class, 'index_category'])->name('category.index');
         Route::get('categories/create', [SettingController::class, 'create_category'])->name('category.create');
+        Route::post('categories', [SettingController::class, 'store_category'])->name('category.store');
         Route::get('categories/{slug}/edit', [SettingController::class, 'edit_category'])->name('category.edit');
+        Route::put('categories/{slug}', [SettingController::class, 'update_category'])->name('category.update');
+        Route::delete('categories/{slug}', [SettingController::class, 'destroy_category'])->name('category.destroy');
 
         Route::get('statuses', [SettingController::class, 'index_statuses'])->name('status.index');
         Route::get('statuses/create', [SettingController::class, 'create_statuses'])->name('status.create');
+        Route::post('statuses', [SettingController::class, 'store_statuses'])->name('status.store');
         Route::get('statuses/{slug}/edit', [SettingController::class, 'edit_statuses'])->name('status.edit');
+        Route::put('statuses/{slug}', [SettingController::class, 'update_statuses'])->name('status.update');
+        Route::delete('statuses/{slug}', [SettingController::class, 'destroy_statuses'])->name('status.destroy');
     });
 
     Route::patch('users/{user}', [UserController::class, 'update'])->name('users.update');

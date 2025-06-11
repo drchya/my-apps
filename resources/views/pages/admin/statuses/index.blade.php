@@ -6,15 +6,10 @@
     </div>
 
     <div
-        x-data="
-            {
-                message: '{{ session('message') }}'
-                deleted: '{{ session('delete') }}'
-            }
-        "
+        x-data="{message: '{{ session('message') }}', warning: '{{ session('warning') }}'}"
         x-init="
             setTimeout(() => message = '', 3000);
-            setTimeout(() => deleted = '', 3000);
+            setTimeout(() => warning = '', 3000);
         "
     >
         <div
@@ -26,7 +21,18 @@
             x-transition:leave="transition ease-in duration-300"
             x-transition:leave-start="opacity-100 translate-y-0"
             x-transition:leave-end="opacity-0 translate-y-2"
-            class="my-2 text-gray-300 text-center md:text-start font-medium bg-emerald-500/70 py-2 md:px-2 rounded-lg"
+            class="my-2 text-center md:text-start font-medium bg-emerald-500/70 py-2 md:px-4 rounded-lg"
+        ></div>
+        <div
+            x-show="warning"
+            x-text="warning"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 translate-y-2"
+            x-transition:enter-end="opacity-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-300"
+            x-transition:leave-start="opacity-100 translate-y-0"
+            x-transition:leave-end="opacity-0 translate-y-2"
+            class="my-2 text-center md:text-start font-medium bg-yellow-500/70 py-2 md:px-4 rounded-lg"
         ></div>
     </div>
 
@@ -80,17 +86,23 @@
                                 >
                                     <i class="fa-solid fa-pencil"></i>
                                 </a>
-                                <button
-                                    class="
-                                        w-8 h-8 border border-gray-800 rounded-md
-                                        focus:outline-none
-                                        bg-red-600 md:bg-transparent md:hover:border-red-600 md:hover:text-red-600
-                                        transition duration-300 ease-in-out
-                                        cursor-pointer
-                                    "
-                                >
-                                    <i class="fa-regular fa-trash-can"></i>
-                                </button>
+                                <form action="{{ route('setting.status.destroy', $item->slug) }}" method="POST" onsubmit="return confirm('Are you want to delete this status?')">
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button
+                                        type="submit"
+                                        class="
+                                            w-8 h-8 border border-gray-800 rounded-md
+                                            focus:outline-none
+                                            bg-red-600 md:bg-transparent md:hover:border-red-600 md:hover:text-red-600
+                                            transition duration-300 ease-in-out
+                                            cursor-pointer
+                                        "
+                                    >
+                                        <i class="fa-regular fa-trash-can"></i>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
