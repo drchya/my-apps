@@ -8,13 +8,15 @@
     </div>
 
     <div
-        x-data="
-            { message: '{{ session('message') }}',
-                deleted: '{{ session('delete') }}' }
+        x-data="{
+                    message: '{{ session('message') }}',
+                    error: '{{ session('error') }}'
+                }
         "
         x-init="
             setTimeout(() => message = '', 3000);
             setTimeout(() => deleted = '', 3000);
+            setTimeout(() => error = '', 3000);
         "
     >
         <div
@@ -27,6 +29,17 @@
             x-transition:leave-start="opacity-100 translate-y-0"
             x-transition:leave-end="opacity-0 translate-y-2"
             class="my-2 text-gray-300 text-center md:text-start font-medium bg-emerald-500/70 py-2 md:px-2 rounded-lg"
+        ></div>
+        <div
+            x-show="error"
+            x-text="error"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 translate-y-2"
+            x-transition:enter-end="opacity-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-300"
+            x-transition:leave-start="opacity-100 translate-y-0"
+            x-transition:leave-end="opacity-0 translate-y-2"
+            class="my-2 text-gray-300 text-center md:text-start font-medium bg-red-500/70 py-2 md:px-2 rounded-lg"
         ></div>
     </div>
 

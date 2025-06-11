@@ -34,7 +34,7 @@
 
         <hr class="text-gray-700" />
 
-        <form action="#" method="POST">
+        <form action="{{ route('setting.type.store') }}" method="POST">
             @csrf
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
@@ -49,9 +49,15 @@
                             transition duration-400 ease-in-out cursor-pointer
                         "
                     >
-                        <option disabled selected>Default Selected</option>
+                        <option disabled {{ old('category') ? '' : 'selected' }}>Default Selected</option>
                         @foreach ($categories as $item)
-                            <option value="{{ $item->id }}" class="text-gray-300 outline-gray-700 bg-gray-900 hover:bg-emerald-600 transition duration-200 ease-in-out">{{ $item->name }}</option>
+                            <option
+                                @if (old('category') == $item->id) selected @endif
+                                value="{{ $item->id }}"
+                                class="text-gray-300 outline-gray-700 bg-gray-900 hover:bg-emerald-600 transition duration-200 ease-in-out"
+                            >
+                                {{ $item->name }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -67,7 +73,11 @@
                         class="w-full px-3 py-2 border border-gray-700 rounded text-gray-300 focus:outline-none focus:ring focus:ring-emerald-600 focus:border-emerald-600 transition duration-300 ease-in-out"
                         required
                         placeholder="Name of type"
+                        value="{{ old('name') }}"
                     >
+                    @error('name')
+                        <p class="text-red-500 mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
 

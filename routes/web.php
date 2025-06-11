@@ -34,8 +34,10 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['auth', OnlyAdmin::class])->prefix('setting')->name('setting.')->group(function () {
         Route::get('type', [SettingController::class, 'index_type'])->name('type.index');
         Route::get('type/create', [SettingController::class, 'create_type'])->name('type.create');
+        Route::post('type', [SettingController::class, 'store_type'])->name('type.store');
         Route::get('type/{slug}/edit', [SettingController::class, 'edit_type'])->name('type.edit');
         Route::put('type/{slug}', [SettingController::class, 'update_type'])->name('type.update');
+        Route::delete('type/{slug}', [SettingController::class, 'destroy_type'])->name('type.destroy');
 
         Route::get('categories', [SettingController::class, 'index_category'])->name('category.index');
         Route::get('categories/create', [SettingController::class, 'create_category'])->name('category.create');

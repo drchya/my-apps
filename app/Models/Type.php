@@ -35,4 +35,9 @@ class Type extends Model
     {
         return $this->hasMany(PreparationItems::class);
     }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
 }

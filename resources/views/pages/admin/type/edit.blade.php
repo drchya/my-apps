@@ -2,17 +2,24 @@
 
 @section('content')
     <div
-        x-data="
-            {
-                message: '{{ session('message') }}'
-                deleted: '{{ session('delete') }}'
-            }
-        "
+        x-data="{message: '{{ session('message') }}', deleted: '{{ session('delete') }}', warning: '{{ session('warning') }}'}"
         x-init="
             setTimeout(() => message = '', 3000);
+            setTimeout(() => warning = '', 3000);
             setTimeout(() => deleted = '', 3000);
         "
     >
+        <div
+            x-show="warning"
+            x-text="warning"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 translate-y-2"
+            x-transition:enter-end="opacity-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-300"
+            x-transition:leave-start="opacity-100 translate-y-0"
+            x-transition:leave-end="opacity-0 translate-y-2"
+            class="my-2 text-center md:text-start font-medium bg-yellow-500 py-2 md:px-2 rounded-lg"
+        ></div>
         <div
             x-show="message"
             x-text="message"
