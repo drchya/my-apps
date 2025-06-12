@@ -14,14 +14,14 @@
         ></div>
 
         <div x-show="showForm" class="mt-4 space-y-4">
-            <form @submit.prevent="submitForm" id="user-form" x-ref="formElement" class="bg-gray-700 p-4 rounded">
+            <form @submit.prevent="submitForm" id="user-form" x-ref="formElement" class="p-4 border border-gray-800 rounded">
                 <div>
                     <label for="email" class="block text-gray-300 mb-1">Email</label>
                     <input
                         type="email"
                         name="email"
                         id="email"
-                        class="w-full px-3 py-2 rounded bg-gray-800 text-white text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition duration-300 ease-in-out"
+                        class="w-full px-3 py-2 rounded border border-gray-800 text-white text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition duration-300 ease-in-out"
                         required
                         placeholder="Enter Your Email"
                         autocomplete="true"

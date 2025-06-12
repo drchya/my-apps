@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Gear;
 use App\Models\Status;
 use App\Models\Type;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class GearsController extends Controller
@@ -16,12 +17,19 @@ class GearsController extends Controller
      */
     public function index()
     {
-        $gears = Gear::with(['category', 'type', 'status'])
-                ->where('user_id', auth()->id())
-                ->orderBy('brand', 'asc')
-                ->get();
+        if (auth()->id() == 1) {
+            $gears = Gear::with(['category', 'type', 'status', 'user'])
+                        ->get();
+        } else {
+            $gears = Gear::with(['category', 'type', 'status'])
+                        ->where('user_id', auth()->id())
+                        ->orderBy('brand', 'asc')
+                        ->get();
+        }
 
-        return view('pages.gear.index', [
+        $view = auth()->id() == 1 ? 'pages.admin.gear.index' : 'pages.gear.index';
+
+        return view($view, [
             'title' => "Gears",
             'gears' => $gears
         ]);
@@ -67,9 +75,17 @@ class GearsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $slug)
     {
-        //
+        $gears = Gear::with(['user', 'category', 'type', 'status'])
+                    ->whereHas('user', function ($query) use ($slug) {
+                        $query->where('slug', $slug);
+                    })
+                    ->get();
+        return view('pages.admin.gear.show', [
+            'title' => 'Data Gears User',
+            'gears' => $gears
+        ]);
     }
 
     /**

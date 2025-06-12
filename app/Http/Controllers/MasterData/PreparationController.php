@@ -22,18 +22,24 @@ class PreparationController extends Controller
      */
     public function index()
     {
-        $preparations = Preparation::with(['mountain', 'user'])
-                                    ->where('user_id', auth()->id())
-                                    ->get();
+        if (auth()->id() == 1) {
+            $preparations = Preparation::with(['mountain', 'user'])
+                                        ->get();
+        } else {
+            $preparations = Preparation::with(['mountain', 'user'])
+                                        ->where('user_id', auth()->id())
+                                        ->get();
 
-        foreach ($preparations as $preparation) {
-            if ($preparation->departure_date && $preparation->return_date) {
-                // Menghitung total hari antara departure_date dan return_date
-                $preparation->total_days = Carbon::parse($preparation->departure_date)->diffInDays(Carbon::parse($preparation->return_date));
-            } else {
-                $preparation->total_days = 1;
+            foreach ($preparations as $preparation) {
+                if ($preparation->departure_date && $preparation->return_date) {
+                    // Menghitung total hari antara departure_date dan return_date
+                    $preparation->total_days = Carbon::parse($preparation->departure_date)->diffInDays(Carbon::parse($preparation->return_date));
+                } else {
+                    $preparation->total_days = 1;
+                }
             }
         }
+
 
         return view('pages.preparation.index', [
             'title' => "Preparations",
@@ -123,6 +129,22 @@ class PreparationController extends Controller
             'preparation' => $preparation,
             'preparation_items' => $preparation_items,
             'types' => $types,
+        ]);
+    }
+
+    public function show_mountain(string $slug)
+    {
+        Carbon::setLocale('id');
+
+        $preparation_mountain = Preparation::with(['mountain', 'user'])
+                                    ->whereHas('mountain', function ($query) use ($slug) {
+                                        $query->where('slug', $slug);
+                                    })
+                                    ->get();
+
+        return view('pages.admin.preparation.mountain.index', [
+            'title' => 'Data User Mt. ' . ($preparation_mountain->first()?->mountain->name ?? '-'),
+            'preparation_mountain' => $preparation_mountain
         ]);
     }
 

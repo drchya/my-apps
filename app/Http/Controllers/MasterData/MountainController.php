@@ -4,6 +4,7 @@ namespace App\Http\Controllers\MasterData;
 
 use App\Http\Controllers\Controller;
 use App\Models\Mountain;
+use App\Models\Preparation;
 use Illuminate\Http\Request;
 
 class MountainController extends Controller
@@ -60,7 +61,7 @@ class MountainController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $slug)
     {
         //
     }

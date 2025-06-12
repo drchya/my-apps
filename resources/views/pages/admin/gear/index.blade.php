@@ -3,7 +3,7 @@
 @section('content')
     <div class="flex items-center">
         <div class="flex items-center">
-            <a href="{{ route('preparation.create') }}" class="text-xs bg-emerald-600 hover:bg-emerald-700 px-2 py-1 rounded text-gray-100 transition duration-300 ease-in-out cursor-pointer">Add Your Prepared</a>
+            <a href="{{ route('gear.create') }}" class="text-xs bg-emerald-600 hover:bg-emerald-700 px-2 py-1 rounded text-gray-100 transition duration-300 ease-in-out cursor-pointer">Add User Gear</a>
         </div>
     </div>
 
@@ -43,7 +43,7 @@
                 <input
                     type="text"
                     id="customSearch"
-                    placeholder="Search Destination..."
+                    placeholder="Search Item..."
                     class="border border-gray-600 text-gray-300 rounded px-2 py-1 focus:border-emerald-600 focus:outline-none transition duration-300 ease-in-out"
                     autocomplete="true"
                 >
@@ -55,94 +55,44 @@
                 <thead class="bg-gray-800">
                     <tr>
                         <th>#</th>
-                        <th>Mountain</th>
-                        @if (auth()->id() == 1)
-                            <th>User</th>
-                        @else
-                            <th>Summit Status</th>
-                        @endif
+                        <th>User</th>
+                        <th>Gear Count</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody id="preparation-table-body">
-                    @if (auth()->id() == 1)
+                    @php
+                        $grouped = $gears->groupBy('user_id');
+                    @endphp
+                    @foreach ($grouped as $userId => $group)
                         @php
-                            $grouped = $preparations->groupBy('mountain_id');
+                            $item = $group->first();
                         @endphp
-                        @foreach($grouped as $mountainId => $group)
-                            @php
-                                $mountain = $group->first()->mountain;
-                            @endphp
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $mountain->name }}</td>
-                                <td>
-                                    <div class="flex items-center gap-1">
-                                        <span class="px-1 bg-emerald-600 rounded">{{ $group->count() }}</span>
-                                        <p>Users</p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <a href="{{ route('preparation.mountain.show', $mountain->slug) }}" class="
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $item->user->email }}</td>
+                            <td>
+                                <div class="flex items-center gap-1">
+                                    <span class="px-1 bg-emerald-600 rounded">{{ $group->count() }}</span>
+                                    <p>Gears</p>
+                                </div>
+                            </td>
+                            <td>
+                                <a
+                                    href="{{ route('gear.user.show', $item->user->slug) }}"
+                                    class="
                                         flex items-center justify-center w-8 h-8 border border-gray-800 rounded-md
                                         focus:outline-none
                                         bg-blue-600 md:bg-transparent md:hover:border-blue-600 md:hover:text-blue-600
                                         transition duration-300 ease-in-out
                                         cursor-pointer
-                                    ">
-                                        <i class="fa-solid fa-info"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        @endforeach
-                    @else
-                        @foreach($preparations as $preparation)
-                            <tr data-id="{{ $preparation->id }}">
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $preparation->mountain->name }}</td>
-                                <td>
-                                    @php
-                                        $badgeClasses = [
-                                            'planning'    => 'bg-gray-600 text-gray-100',
-                                        ];
-                                    @endphp
-                                    <span class="px-2 py-1 rounded text-sm font-medium {{ $badgeClasses[$preparation->status] ?? 'bg-gray-500 text-white' }} capitalize">
-                                        {{ $preparation->status }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="flex items-center gap-2">
-                                        <a
-                                            href="{{ route('preparation.show', $preparation->slug) }}"
-                                            class="
-                                                flex items-center justify-center w-8 h-8 border border-gray-800 rounded-md
-                                                focus:outline-none
-                                                bg-blue-600 md:bg-transparent md:hover:border-blue-600 md:hover:text-blue-600
-                                                transition duration-300 ease-in-out
-                                                cursor-pointer
-                                            "
-                                        >
-                                            <i class="fa-solid fa-info"></i>
-                                        </a>
-
-                                        <button
-                                            class="
-                                                delete-preparation
-                                                w-8 h-8 border border-gray-800 rounded-md
-                                                focus:outline-none
-                                                bg-red-600 md:bg-transparent md:hover:border-red-600 md:hover:text-red-600
-                                                transition duration-300 ease-in-out
-                                                cursor-pointer
-                                            "
-                                            data-id="{{ $preparation->id }}"
-                                        >
-                                            <i class="fa-regular fa-trash-can"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
-                    @endif
+                                    "
+                                >
+                                    <i class="fa-solid fa-info"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>

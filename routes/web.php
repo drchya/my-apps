@@ -28,6 +28,8 @@ Route::middleware('auth')->group(function () {
         Route::get('recycle', [TrashBinController::class, 'recycle'])->name('users.recycle');
         Route::delete('users/${id}/force', [TrashBinController::class, 'forceDelete'])->name('users.force.delete');
         Route::patch('users/{id}/restore', [TrashBinController::class, 'restore'])->name('users.restore');
+        Route::get('preparations/{slug}', [PreparationController::class, 'show_mountain'])->name('preparation.mountain.show');
+        Route::get('gear/user/{slug}', [GearsController::class, 'show'])->name('gear.user.show');
     });
 
     Route::middleware(['auth', OnlyAdmin::class])->prefix('setting')->name('setting.')->group(function () {
