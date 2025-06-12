@@ -1,7 +1,7 @@
 <?php
-
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MasterData\Admin\BreadcrumbController;
 use App\Http\Controllers\MasterData\GearsController;
 use App\Http\Controllers\MasterData\LogisticsController;
 use App\Http\Controllers\MasterData\MountainController;
@@ -13,7 +13,6 @@ use App\Http\Controllers\MasterData\UserController;
 use App\Http\Controllers\TrashBinController;
 use App\Http\Middleware\OnlyAdmin;
 use Illuminate\Support\Facades\Route;
-
 
 Route::get('/', function () {
     return view('welcome');
@@ -52,6 +51,8 @@ Route::middleware('auth')->group(function () {
         Route::get('statuses/{slug}/edit', [SettingController::class, 'edit_statuses'])->name('status.edit');
         Route::put('statuses/{slug}', [SettingController::class, 'update_statuses'])->name('status.update');
         Route::delete('statuses/{slug}', [SettingController::class, 'destroy_statuses'])->name('status.destroy');
+
+        Route::resource('breadcrumb', BreadcrumbController::class)->parameters(['' => 'breadcrumb']);
     });
 
     Route::patch('users/{user}', [UserController::class, 'update'])->name('users.update');

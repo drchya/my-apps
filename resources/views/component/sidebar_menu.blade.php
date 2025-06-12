@@ -132,6 +132,7 @@
         ['route' => 'setting.type.index', 'label' => 'Type', 'adminOnly' => true],
         ['route' => 'setting.category.index', 'label' => 'Category', 'adminOnly' => true],
         ['route' => 'setting.status.index', 'label' => 'Status', 'adminOnly' => true],
+        ['route' => 'setting.breadcrumb.index', 'label' => 'Breadcrumb', 'adminOnly' => true]
     ];
 
     $isSettingActive = false;
