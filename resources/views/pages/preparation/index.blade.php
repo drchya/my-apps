@@ -72,7 +72,10 @@
                         @foreach($grouped as $mountainId => $group)
                             @php
                                 $mountain = $group->first()->mountain;
+<<<<<<< Updated upstream
                                 $slug = $group->first()->slug;
+=======
+>>>>>>> Stashed changes
                             @endphp
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
@@ -84,6 +87,7 @@
                                     </div>
                                 </td>
                                 <td>
+<<<<<<< Updated upstream
                                     <div class="flex items-center gap-2">
                                         <a
                                             href="{{ route('preparation.mountain.show', $mountain->slug) }}"
@@ -110,6 +114,17 @@
                                             <i class="fa-regular fa-file-excel"></i>
                                         </a>
                                     </div>
+=======
+                                    <a href="{{ route('preparation.mountain.show', $mountain->slug) }}" class="
+                                        flex items-center justify-center w-8 h-8 border border-gray-800 rounded-md
+                                        focus:outline-none
+                                        bg-blue-600 md:bg-transparent md:hover:border-blue-600 md:hover:text-blue-600
+                                        transition duration-300 ease-in-out
+                                        cursor-pointer
+                                    ">
+                                        <i class="fa-solid fa-info"></i>
+                                    </a>
+>>>>>>> Stashed changes
                                 </td>
                             </tr>
                         @endforeach
