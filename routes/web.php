@@ -2,6 +2,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MasterData\Admin\BreadcrumbController;
+use App\Http\Controllers\MasterData\ExportController;
 use App\Http\Controllers\MasterData\GearsController;
 use App\Http\Controllers\MasterData\LogisticsController;
 use App\Http\Controllers\MasterData\MountainController;
@@ -13,6 +14,8 @@ use App\Http\Controllers\MasterData\UserController;
 use App\Http\Controllers\TrashBinController;
 use App\Http\Middleware\OnlyAdmin;
 use Illuminate\Support\Facades\Route;
+
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -78,6 +81,10 @@ Route::middleware('auth')->group(function () {
         Route::get('{preparation}/transportation', [TransportationController::class, 'index'])->name('transportation.index');
         Route::post('{preparation}/transportation', [TransportationController::class, 'store'])->name('transportation.store');
         Route::put('{preparation}/transportation/{transportation}', [TransportationController::class, 'update'])->name('transportation.update');
+    });
+
+    Route::prefix('export')->name('export.')->group(function () {
+        Route::get('preparation/download/{slug}', [ExportController::class, 'export_preparation'])->name('preparation.download');
     });
 });
 

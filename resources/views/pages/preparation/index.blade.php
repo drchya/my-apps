@@ -23,7 +23,7 @@
             x-transition:leave="transition ease-in duration-300"
             x-transition:leave-start="opacity-100 translate-y-0"
             x-transition:leave-end="opacity-0 translate-y-2"
-            class="my-2 text-gray-300 text-center md:text-start font-medium bg-emerald-500/70 py-2 md:px-2 rounded-lg"
+            class="my-2 text-gray-300 text-center md:text-start font-medium bg-emerald-500/70 py-2 md:px-4 rounded-lg"
         ></div>
     </div>
 
@@ -72,6 +72,7 @@
                         @foreach($grouped as $mountainId => $group)
                             @php
                                 $mountain = $group->first()->mountain;
+                                $slug = $group->first()->slug;
                             @endphp
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
@@ -83,15 +84,32 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <a href="{{ route('preparation.mountain.show', $mountain->slug) }}" class="
-                                        flex items-center justify-center w-8 h-8 border border-gray-800 rounded-md
-                                        focus:outline-none
-                                        bg-blue-600 md:bg-transparent md:hover:border-blue-600 md:hover:text-blue-600
-                                        transition duration-300 ease-in-out
-                                        cursor-pointer
-                                    ">
-                                        <i class="fa-solid fa-info"></i>
-                                    </a>
+                                    <div class="flex items-center gap-2">
+                                        <a
+                                            href="{{ route('preparation.mountain.show', $mountain->slug) }}"
+                                            class="
+                                                flex items-center justify-center w-8 h-8 border border-gray-800 rounded-md
+                                                focus:outline-none
+                                                bg-blue-600 md:bg-transparent md:hover:border-blue-600 md:hover:text-blue-600
+                                                transition duration-300 ease-in-out
+                                                cursor-pointer
+                                            "
+                                        >
+                                            <i class="fa-solid fa-info"></i>
+                                        </a>
+                                        <a
+                                            href="{{ route('export.preparation.download', $slug) }}"
+                                            class="
+                                                flex items-center justify-center w-8 h-8 border border-gray-800 rounded-md
+                                                focus:outline-none
+                                                bg-green-600 md:bg-transparent md:hover:border-green-600 md:hover:text-green-600
+                                                transition duration-300 ease-in-out
+                                                cursor-pointer
+                                            "
+                                        >
+                                            <i class="fa-regular fa-file-excel"></i>
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach

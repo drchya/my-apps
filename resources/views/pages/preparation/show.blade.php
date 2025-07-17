@@ -22,7 +22,7 @@
             x-transition:leave="transition ease-in duration-300"
             x-transition:leave-start="opacity-100 translate-y-0"
             x-transition:leave-end="opacity-0 translate-y-2"
-            class="my-2 text-gray-300 text-center md:text-start font-medium bg-emerald-500/70 py-2 md:px-2 rounded-lg"
+            class="my-2 text-gray-300 text-center md:text-start font-medium bg-emerald-500/70 py-2 md:px-4 rounded-lg"
         ></div>
         <div
             x-show="error"
@@ -33,60 +33,68 @@
             x-transition:leave="transition ease-in duration-300"
             x-transition:leave-start="opacity-100 translate-y-0"
             x-transition:leave-end="opacity-0 translate-y-2"
-            class="my-2 text-gray-300 text-center md:text-start font-medium bg-red-500/70 py-2 md:px-2 rounded-lg"
+            class="my-2 text-gray-300 text-center md:text-start font-medium bg-red-500/70 py-2 md:px-4 rounded-lg"
         ></div>
     </div>
 
-    <h1 class="text-gray-50 text-xl md:text-2xl uppercase font-extrabold">Mt. {{ $preparation->mountain->name }}</h1>
+    <div>
+        <h1 class="text-gray-50 text-xl md:text-2xl uppercase font-extrabold">Mt. {{ $preparation->mountain->name }}</h1>
 
-    <p class="flex items-center gap-2 text-gray-400 font-medium mb-1">
-        <span class="flex w-4 items-center justify-center">
-            <i class="fa-solid fa-mountain text-yellow-900"></i>
-        </span>
-        {{ number_format($preparation->mountain->elevation, 0, ',', '.') }} Mdpl
-    </p>
-
-    <p class="flex items-center gap-2 text-gray-400 font-medium mb-1">
-        <span class="flex w-4 items-center justify-center">
-            <i class="fa-solid fa-map-pin text-red-600"></i>
-        </span>
-        {{ $preparation->mountain->location }}
-    </p>
-    @php
-        use Carbon\Carbon;
-
-        $departure = Carbon::parse($preparation->departure_date)->translatedFormat('d F');
-        $return = Carbon::parse($preparation->return_date)->translatedFormat('d F Y');
-    @endphp
-    <p class="flex items-center gap-2 text-gray-400 font-medium mb-1">
-        <span class="flex w-4 items-center justify-center">
-            <i class="fa-regular fa-calendar text-red-400"></i>
-        </span>
-        {{ $departure }} - {{ $return }} ({{ $preparation->total_days }} Days)
-    </p>
-
-    <p class="flex items-center gap-2 text-gray-400 font-medium">
-        <span class="flex w-4 items-center justify-center">
-            <i class="fa-solid fa-dollar-sign text-green-600"></i>
-        </span>
-        Total Budget: Rp{{ number_format($preparation->budget_estimate, 0, ',', '.') }}
-    </p>
-
-    <div class="flex items-center my-2 gap-2">
-        <a href="{{ route('preparation.logistics.index', $preparation->slug) }}" class="flex items-center gap-1 text-yellow-600 font-medium hover:text-yellow-800 transition duration-300 ease-in-out">
+        <p class="flex items-center gap-2 text-gray-400 font-medium mb-1">
             <span class="flex w-4 items-center justify-center">
-                <i class="fa-solid fa-box"></i>
+                <i class="fa-solid fa-mountain text-yellow-900"></i>
             </span>
-            Logistic
-        </a>
-        <a href="{{ route('preparation.transportation.index', $preparation->slug) }}" class="flex items-center gap-1 text-blue-600 font-medium hover:text-blue-800 transition duration-300 ease-in-out">
+            {{ number_format($preparation->mountain->elevation, 0, ',', '.') }} Mdpl
+        </p>
+
+        <p class="flex items-center gap-2 text-gray-400 font-medium mb-1">
             <span class="flex w-4 items-center justify-center">
-                <i class="fa-solid fa-car-side"></i>
+                <i class="fa-solid fa-map-pin text-red-600"></i>
             </span>
-            Transportation
-        </a>
+            {{ $preparation->mountain->location }}
+        </p>
+        @php
+            use Carbon\Carbon;
+
+            $departure = Carbon::parse($preparation->departure_date)->translatedFormat('d F');
+            $return = Carbon::parse($preparation->return_date)->translatedFormat('d F Y');
+        @endphp
+        <p class="flex items-center gap-2 text-gray-400 font-medium mb-1">
+            <span class="flex w-4 items-center justify-center">
+                <i class="fa-regular fa-calendar text-red-400"></i>
+            </span>
+            {{ $departure }} - {{ $return }} ({{ $preparation->total_days }} Days)
+        </p>
+
+        <p class="flex items-center gap-2 text-gray-400 font-medium">
+            <span class="flex w-4 items-center justify-center">
+                <i class="fa-solid fa-dollar-sign text-green-600"></i>
+            </span>
+            Total Budget: Rp{{ number_format($preparation->budget_estimate, 0, ',', '.') }}
+        </p>
+
+        <div class="flex items-center my-2 gap-2">
+            <a href="{{ route('preparation.logistics.index', $preparation->slug) }}" class="flex items-center gap-1 text-yellow-600 font-medium hover:text-yellow-800 transition duration-300 ease-in-out">
+                <span class="flex w-4 items-center justify-center">
+                    <i class="fa-solid fa-box"></i>
+                </span>
+                Logistic
+            </a>
+            <a href="{{ route('preparation.transportation.index', $preparation->slug) }}" class="flex items-center gap-1 text-blue-600 font-medium hover:text-blue-800 transition duration-300 ease-in-out">
+                <span class="flex w-4 items-center justify-center">
+                    <i class="fa-solid fa-car-side"></i>
+                </span>
+                Transportation
+            </a>
+            <a href="{{ route('export.preparation.download', $preparation->slug) }}" class="flex items-center gap-1 text-red-600 font-medium hover:text-red-800 transition duration-300 ease-in-out">
+                <span class="flex w-4 items-center justify-center">
+                    <i class="fa-regular fa-file-excel"></i>
+                </span>
+                Export
+            </a>
+        </div>
+        <a href="{{ route('preparation.index') }}" class="mt-1 w-full text-emerald-600 font-medium hover:text-emerald-800 transition duration-300 ease-in-out">Back to Table</a>
     </div>
-    <a href="{{ route('preparation.index') }}" class="mt-1 w-full text-emerald-600 font-medium hover:text-emerald-800 transition duration-300 ease-in-out">Back to Table</a>
 
     <hr class="text-gray-800 my-4">
 
